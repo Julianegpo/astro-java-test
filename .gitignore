@@ -1,0 +1,36 @@
+# === Node / Astro (webapp) ===
+node_modules/
+webapp/dist/
+webapp/.astro/
+.npm/
+
+# === Java / Maven (server) ===
+target/
+*.class
+*.jar
+!mvnw
+*.log
+
+# === IDE / editor ===
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+*.swp
+
+# === SO ===
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# === Entorno ===
+.env
+.env.local
+*.tmp
+
+# === OpenCode agent harness (no es parte del proyecto) ===
+.agents/
+skills-lock.json
+
