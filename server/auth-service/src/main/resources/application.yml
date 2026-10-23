@@ -1,0 +1,15 @@
+# Local: solo lo imprescindible para vivir sin config server (D5, degrada con optional:).
+# El resto (URL Eureka, H2 explicita, claves RS256, TTL) viaja del config server.
+spring:
+  application:
+    name: auth-service
+  config:
+    import: optional:configserver:http://localhost:8888
+  jpa:
+    hibernate:
+      # Nunca create-drop: borraria el seed de data.sql (el init de SQL corre antes de JPA)
+      ddl-auto: none
+
+# Puerto aleatorio tambien en local (D3): si el config server esta caido, sigue cumpliendo
+server:
+  port: 0
