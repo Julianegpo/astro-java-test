@@ -1,0 +1,42 @@
+# auth-service (D3: puerto aleatorio; D16: H2 en memoria explicita; D19/D21: JWT RS256).
+# Clave privada SOLO-DEV: vive unicamente en este fichero del config nativo; la publica
+# viaja a gateway-server.yml (T8). Cambiar expiration-seconds + reiniciar auth cambia la TTL.
+server:
+  port: 0
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:authdb
+
+app:
+  jwt:
+    expiration-seconds: 3600
+    private-key: |-
+      -----BEGIN PRIVATE KEY-----
+      MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDWNkUWZxc8Bsq5
+      LW+PGQMNsinHk4pxjGx3C190xm3H/gkK2dL8dnjLtujA2tD1MeqJ2CNBDgX2Nfyi
+      9J/UsKCDVpTf4ma7lJJONm0Vy+pdvWm03RahJytpYbkF/5jd1HnWReBfw71Dlp5q
+      4/fXzbrCAffZeZzX9kbPIY739LEAc/zG2lRcHlS75pljVkrfGOu75TDK8g1/+5x1
+      9kUTb6p+k0XvhieqoFcNBdDo+M3X9EsvIXCl/vZyhwMMhFSk5lS+i3cD2Bafhuj4
+      DyVuwovhqow2aIcBGvu0ztS0PxxsPe//dKr6dqCt7dyDWleQDbvgnIRr8V/9p4A/
+      wV5ntqW/AgMBAAECggEAA6Z1KWTvDx+h1qfGL4VK9Q+fc+bffgkdcchnmLXaYFHl
+      xq6Xv1+ntgizQA5R99S60mFfZGs77Cxfq6/eUk5YEqxW7XCJ+ScOEkAe+fLf+QRa
+      +OAfMaE3E2VWm15136IY9yJFwn8zbHja4gVYqRHa1POzkTW0vjQpx3c0B2DpsG8n
+      8+cbTiHPiIyMODTjYkRu+mPHjh4+Y2QaoVOCBVyRUMFskWAV5WcGMQyvPFyL2Ocz
+      tiGHt+gCc71AVjo4JeuCO1k0OgPmr62vb3euYsh1bEdntpH8DT5YM9YjsCI91Ldy
+      udXXLvsDaKEff4oRcqxkWP4DvvXWwkyPVjzVuG96ZQKBgQDdpKNnR0Z+KJnEj04u
+      IZ0jnXm912Ophco47zjEuncYGIEoo1w9Ljb8ulem8TxGN2hVEtbOVzGrAtEVmLlt
+      FVxbqYyh2JbSi7wiZUocFqMHCZenIQ0y3dZ4/c/PVrCU9vExs0Z0GIrGlp0SIaX4
+      yTBTeaKUWQaaU+BMGEdXymDvMwKBgQD3ar7f9dzIQe8ueAnjHwK4jG5J8yLe/b17
+      zYa/6culvZ0OEaS+43pPT33n9ArRjRixImMip5+WZF7W9jaibC+RGqBZNeSEkLcm
+      byaSFRe/HTgpj59j/oewNOl5naLNK4OwPeJRj3eCyg6FQt15gtuF9i/cJtFoKGzW
+      4y3mQuUfRQKBgQDJkjuRZ77yaVY+7t15EtToWQUo48QdnjFlShpkv/gjj9WW8cqn
+      UWpsucORbf8VFLrr8/ArRB1Fm5Avhe/NBwoxyqa9Yk74OGDnHxshJG0rr0uekW6B
+      fkLZUms1828wasy8GIDQgKllJgC/Rp68/avXnt1+8OASZomsasAnVUSHBQKBgBRm
+      vO6Cu33X0f0m8MnFmNfW3JFEdy+kBKfcvqu8f4pfJEAwvEDxSPiZOWyS9wFofQy+
+      JSaKY+JmzFs1WjPyb8mrRGWWyA0WUcPdjnSlQJwFsMfci+wW5OFmu4nHsdDxMZ6q
+      u6q2BcjHGINsjA6k960IK9IfcU0BaFgfy30dLv9xAoGAUFu4apUgPHKgEbRzfh0j
+      p3dcetBDEJ9QH5G71dnJBiiX9GlAkk7on3ZTOqre/U9U7OUcRzubk1SFbJquRdVb
+      2nYdcx26ALA4Ryf41RQG2BxZKltQAqNIus1hk3uhUJlrilLDv0kemK48kL212o4s
+      lr5dusZ6YRViX3tzUUPG2w4=
+      -----END PRIVATE KEY-----

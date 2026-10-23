@@ -1,0 +1,7 @@
+# Config comun a todos los servicios (repo nativo - D4/D5)
+eureka:
+  client:
+    service-url:
+      default-zone: http://localhost:8761/eureka
+  instance:
+    prefer-ip-address: true
