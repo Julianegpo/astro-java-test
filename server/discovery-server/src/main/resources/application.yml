@@ -1,0 +1,13 @@
+server:
+  port: 8761
+
+spring:
+  application:
+    name: discovery-server
+
+# Eureka solitario (D12): no se registra ni consulta registro.
+# Sin config server: arranca el segundo y evita ciclos de arranque.
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
