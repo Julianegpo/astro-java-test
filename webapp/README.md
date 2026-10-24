@@ -1,35 +1,37 @@
-# webapp — app Astro (plantilla)
+# webapp — Astro app (template)
 
-Starter **Astro 7** generado con la plantilla `basics` y **dejado intacto a propósito**: el trabajo de este repo está en `server/` (ver [`../SPEC.md`](../SPEC.md)) y la regla es no tocar esta carpeta (criterio de éxito 7).
+**Astro 7** starter generated from the `basics` template and **deliberately left untouched**: the
+work in this repo lives in `server/` (see [`../SPEC.md`](../SPEC.md)) and the rule is never to
+touch this folder (success criterion 7).
 
 ```sh
 npm create astro@latest -- --template basics
 ```
 
-## Comandos
+## Commands
 
-Todos desde `webapp/`:
+All from `webapp/`:
 
-| Comando | Acción |
+| Command | Action |
 | :--- | :--- |
-| `npm install` | Instala dependencias |
-| `npm run dev` | Servidor de desarrollo en `localhost:4321` |
-| `npm run build` | Build de producción a `./dist/` |
-| `npm run preview` | Previsualiza el build |
-| `npm run astro ...` | CLI de Astro (`astro add`, `astro check`, …) |
+| `npm install` | Installs dependencies |
+| `npm run dev` | Starts the dev server at `localhost:4321` |
+| `npm run build` | Production build to `./dist/` |
+| `npm run preview` | Previews the build |
+| `npm run astro ...` | Astro CLI (`astro add`, `astro check`, …) |
 
-## Estructura
+## Structure
 
 ```text
 webapp/
-├── public/            # assets estáticos
+├── public/            # static assets
 ├── src/
-│   ├── assets/        # imágenes
-│   ├── components/    # componentes .astro
+│   ├── assets/        # images
+│   ├── components/    # .astro components
 │   ├── layouts/       # layouts
-│   └── pages/         # rutas (index.astro)
+│   └── pages/         # routes (index.astro)
 ├── astro.config.mjs
 └── package.json
 ```
 
-Documentación: <https://docs.astro.build>.
+Docs: <https://docs.astro.build>.

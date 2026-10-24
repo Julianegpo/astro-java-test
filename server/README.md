@@ -1,111 +1,136 @@
-# server — esqueleto de microservicios Spring Boot
+# server — Spring Boot microservices skeleton
 
-Backend de ejemplo con Spring Boot **3.5.16** (LTS) + Spring Cloud **2025.0.3**: configuración centralizada, descubrimiento Eureka, autenticación JWT **RS256** y QA de build completo. El objetivo es que se parezca a una app empresarial real sin necesitar nada externo (sin Docker, sin repo git de config, sin SonarQube).
+Sample backend with Spring Boot **3.5.16** (LTS) + Spring Cloud **2025.0.3**: centralized
+configuration, Eureka discovery, JWT **RS256** authentication and full build QA. The goal is to
+look like a real enterprise app while needing nothing external (no Docker, no config git repo,
+no SonarQube).
 
-> **Estado:** tareas **T1–T6** completas (parent + config + Eureka + auth con JWT). Quedan **T7–T11** (demo-service, gateway, Swagger agregado). El flujo JWT completo *por el gateway* llega en T8–T10.
+> **Status:** tasks **T1–T8** complete (parent + config + Eureka + auth with JWT + demo-service +
+> gateway routes). Remaining: **T9–T11** (JWT validation at the gateway, aggregated Swagger UI,
+> final README pass). The full JWT flow *through the gateway* lands in T9–T10.
 
-## Arquitectura
+## Architecture
 
-Multi-módulo Maven. Un único `build-parent` (raíz) fija **todas** las versiones; los módulos hijos no declaran `<version>`.
+Multi-module Maven. A single `build-parent` (root) pins **every** version; child modules declare
+no `<version>`.
 
-| Módulo | Puerto | Responsabilidad |
-| --- | --- |---|
-| `build-parent` | — | `server/pom.xml`: única fuente de versiones + QA heredado |
-| `config-server` | **8888** | Spring Cloud Config (backend *native*: config por código en este repo) |
-| `discovery-server` | **8761** | Eureka (1 nodo, solitario) |
-| `auth-service` | **aleatorio** | H2 en memoria + JWT RS256 firmado; TTL configurable por config server |
-| `demo-service` | aleatorio | `GET /api/demo/hello` → `"Hello world!"` (pendiente: T7) |
-| `gateway-server` | **8080** | Única puerta de entrada; valida JWT y sirve Swagger agregado (pendiente: T8–T10) |
+| Module | Port | Responsibility |
+| --- | --- | --- |
+| `build-parent` | — | `server/pom.xml`: single source of versions + inherited QA |
+| `config-server` | **8888** | Spring Cloud Config (*native* backend: config as code in this repo) |
+| `discovery-server` | **8761** | Eureka (single node, solitary) |
+| `auth-service` | **random** | In-memory H2 + signed RS256 JWT; TTL configurable via config server |
+| `demo-service` | random | `GET /api/demo/hello` → `"Hello world!"` |
+| `gateway-server` | **8080** | Single entry point; routes via Eureka and serves aggregated Swagger (T9–T10) |
 
-Orden de arranque: **config → eureka → auth/demo → gateway**. El cliente solo ve el `8080`; auth y demo se descubren por nombre vía Eureka, con puerto aleatorio.
+Startup order: **config → eureka → auth/demo → gateway**. The client only talks to `8080`; auth
+and demo are discovered by name through Eureka, on random ports.
 
-## Requisitos
+## Requirements
 
-- JDK 25 (compilamos con `--release 21`, así que el bytecode es Java 21).
-- Nada más: el Maven Wrapper (`./mvnw`) descarga la versión exacta de Maven (3.9.16) sola.
+- JDK 25 (we compile with `--release 21`, so the bytecode targets Java 21).
+- Nothing else: the Maven Wrapper (`./mvnw`) downloads the exact Maven version (3.9.16) itself.
 
-## Arranque
+## Start
 
 ```powershell
-# desde server/
+# from server/
 ./mvnw -B spring-boot:run -pl config-server      # 8888
 ./mvnw -B spring-boot:run -pl discovery-server   # 8761
-./mvnw -B spring-boot:run -pl auth-service       # puerto aleatorio → mira el log o Eureka
+./mvnw -B spring-boot:run -pl auth-service       # random port → check the log or Eureka
+./mvnw -B spring-boot:run -pl demo-service       # random port → check the log or Eureka
+./mvnw -B spring-boot:run -pl gateway-server     # 8080
 ```
 
-Eureka queda en `http://localhost:8761/` y muestra `AUTH-SERVICE` con su puerto aleatorio.
+Eureka lives at `http://localhost:8761/` and shows `AUTH-SERVICE` and `DEMO-SERVICE` with their
+random ports.
 
-> `spring-boot:run` lanza un proceso hijo. Si reinicias, mata el proceso por el **puerto que escucha** (no solo el wrapper Maven) o quedará un JVM huérfano.
+> `spring-boot:run` forks a child process. When restarting, kill the process by its **listening
+> port** (not just the Maven wrapper) or an orphan JVM will linger.
 
-## Build y QA
+## Build and QA
 
 ```powershell
-./mvnw -B verify                 # compila + tests + formateo + análisis (la verificación principal)
-./mvnw -B verify -pl auth-service -am   # un módulo concreto + sus dependencias
-./mvnw spotless:apply            # formatear a mano
+./mvnw -B verify                 # compiles + tests + formatting + analysis (the main check)
+./mvnw -B verify -pl auth-service -am   # a concrete module + its dependencies
+./mvnw spotless:apply            # format by hand
 ```
 
-`verify` ejecuta cuatro puertas de calidad: **Spotless** (google-java-format 1.36.1), **Checkstyle** (reglas en `config/checkstyle.xml`), **SpotBugs + FindSecBugs** (análisis estático con reglas de seguridad) y **JaCoCo** (reporte de cobertura en `target/site/jacoco/`).
+`verify` runs four quality gates: **Spotless** (google-java-format 1.36.1), **Checkstyle**
+(rules in `config/checkstyle.xml`), **SpotBugs + FindSecBugs** (static analysis with security
+rules) and **JaCoCo** (coverage report in `target/site/jacoco/`).
 
-## Probar el auth (hoy, puerto directo)
+## Try the auth (today, direct port)
 
-`POST /api/auth/token` con el usuario sembrado `demo`/`demo`:
+`POST /api/auth/token` with the seeded user `demo`/`demo`:
 
 ```powershell
-# Swagger UI en el navegador: http://localhost:<puerto-auth>/swagger-ui.html
-# o por CLI (sustituye <auth> por el puerto del log):
+# Swagger UI in the browser: http://localhost:<auth-port>/swagger-ui.html
+# or CLI (replace <auth> with the port from the log):
 Invoke-RestMethod -Method Post -Uri http://localhost:<auth>/api/auth/token `
   -Body '{"username":"demo","password":"demo"}' -ContentType 'application/json'
 ```
 
-Devuelve un JWT RS256. Contraseña incorrecta → `401` y `{"code":401,"message":"Invalid credentials",...}`. Cuando exista el gateway (T8+), todo esto se hace contra `http://localhost:8080`.
+It returns an RS256 JWT. Wrong password → `401` and `{"code":401,"message":"Invalid credentials",...}`.
+Once the gateway exists (T8+), do all of this against `http://localhost:8080`.
 
-## Generar tu propia clave RS256 (opcional)
+## Generate your own RS256 key (optional)
 
-La clave que viene en el repo es SOLO-DEV. Para usar la tuya:
+The key shipped in the repo is DEV-ONLY. To use your own:
 
-1. **Genera el par** (JDK 25, sin instalar nada):
+1. **Generate the pair** (JDK 25, nothing to install):
 
    ```powershell
    openssl genrsa -out priv.pem 2048
    openssl rsa -in priv.pem -pubout -out pub.pem
    ```
 
-   o solo con Java (single-file, sin OpenSSL):
+   or Java-only (single-file, no OpenSSL):
 
    ```powershell
-   java C:\path\a\GenRsa.java   # genera PKCS#8 (privada) + X.509 (pública) en PEM
+   java C:\path\to\GenRsa.java   # writes PKCS#8 (private) + X.509 (public) PEMs
    ```
 
-2. **Pega la privada** en `config-server/src/main/resources/config/auth-service.yml`, en `app.jwt.private-key`, respetando los guiones `-----BEGIN/END PRIVATE KEY-----`.
+2. **Paste the private key** into `config-server/src/main/resources/config/auth-service.yml`,
+   under `app.jwt.private-key`, keeping the `-----BEGIN/END PRIVATE KEY-----` markers.
 
-3. **Añade la pública** (aún pendiente de T8–T9): en `config/gateway-server.yml` la usará el resource-server para verificar la firma.
+3. **Add the public key** (still pending, T9): `config/gateway-server.yml` will use it in the
+   resource server to verify signatures.
 
-4. **Reinicia** `config-server` y `auth-service`. Si la clave no la lee bien el config, el auth degrada a config local y arranca igualmente (modo `optional:configserver`).
+4. **Restart** `config-server` and `auth-service`. If the config cannot read the key, auth
+   degrades to local config and still starts (mode `optional:configserver`).
 
-> Material criptográfico marcado **SOLO-DEV**: no usar estas claves en producción. Rotación real / JWKS quedó descartado a propósito (D21) por el choque con los puertos aleatorios.
+> Cryptographic material marked **DEV-ONLY**: never use these keys in production. Real rotation /
+> JWKS was deliberately dropped (D21) because it clashes with the random ports.
 
-## Cambiar la TTL del JWT (sin recompilar)
+## Change the JWT TTL (no recompile)
 
-1. Edita `app.jwt.expiration-seconds` en `config-server/src/main/resources/config/auth-service.yml` (por defecto `3600`).
-2. Reinicia `config-server` y `auth-service`.
-3. Pide un token: `exp − iat` refleja el nuevo valor. **Criterio de éxito 4** de la SPEC, comprobado (3600 → 1800 → 3600).
+1. Edit `app.jwt.expiration-seconds` in `config-server/src/main/resources/config/auth-service.yml`
+   (default `3600`).
+2. Restart `config-server` and `auth-service`.
+3. Request a token: `exp − iat` reflects the new value. **Success criterion 4** of the SPEC,
+   already verified (3600 → 1800 → 3600).
 
-## Estructura
+## Structure
 
 ```text
 server/
-├── pom.xml                     # build-parent (única fuente de versiones)
-├── mvnw, mvnw.cmd, .mvn/       # wrapper versionado
+├── pom.xml                     # build-parent (single source of versions)
+├── mvnw, mvnw.cmd, .mvn/       # versioned wrapper
 ├── lombok.config
-├── config/checkstyle.xml       # reglas de estilo
+├── config/checkstyle.xml       # style rules
 ├── config-server/
-│   └── src/main/resources/config/   # repo NATIVO de configuración
-│       ├── application.yml         # común (Eureka)
-│       └── auth-service.yml        # par RS256 + expiration-seconds + H2
+│   └── src/main/resources/config/   # NATIVE config repository
+│       ├── application.yml         # shared (Eureka)
+│       ├── auth-service.yml        # RS256 pair + expiration-seconds + H2
+│       ├── demo-service.yml
+│       └── gateway-server.yml      # routes (public key lands in T9)
 ├── discovery-server/
-└── auth-service/
-    └── src/main/resources/         # application.yml, schema.sql, data.sql
+├── auth-service/
+│   └── src/main/resources/         # application.yml, schema.sql, data.sql
+├── demo-service/
+└── gateway-server/
 ```
 
-Diseño por capas hexagonales (D2): `adapter.in.web` (HTTP) → `application.service` (casos de uso y puertos) → `adapter.out` (JPA). La clave privada jamás sale del config nativo.
+Hexagonal layered design (D2): `adapter.in.web` (HTTP) → `application.service` (use cases and
+ports) → `adapter.out` (JPA). The private key never leaves the native config.
