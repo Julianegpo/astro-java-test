@@ -96,7 +96,7 @@ Cada tarea deja un camino completo y comprobable (nada de construir por capas):
 - [x] `./mvnw -B verify` en verde (BUILD SUCCESS, exit 0)
 
 ### Fase 3: Demo + Gateway
-- [ ] **T7**: `demo-service`: `GET /api/demo/hello` → `"Hello world!"` + Eureka + config client + springdoc
+- [x] **T7**: `demo-service`: `GET /api/demo/hello` → `"Hello world!"` + Eureka + config client + springdoc
 - [ ] **T8**: `gateway-server`: rutas vía Eureka (auth/demo + bucle `/v3/api-docs/**`) con config desde config server
 - [ ] **T9**: `gateway-server`: validación JWT RS256 (pública desde config) + whitelist (D20) + tests E2E (sin token 401 / token válido 200 / clave incorrecta 401)
 

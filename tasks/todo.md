@@ -165,13 +165,16 @@
 **Description:** Módulo `demo-service` (web, eureka-client, spring-cloud-starter-config, springdoc webmvc-ui, actuator, lombok). `HelloController` (adapter.in.web) que devuelve `"Hello world!"` (texto plano). `spring.application.name=demo-service` + `spring.config.import`. Crear `config/demo-service.yml` en el config server (`server.port: 0`). Tests: unit del controller + `@WebMvcTest` + contexto en frío.
 
 **Acceptance criteria:**
-- [ ] `GET /api/demo/hello` devuelve 200 `"Hello world!"`; registrado en Eureka con puerto aleatorio
-- [ ] Swagger UI accesible en el puerto aleatorio del servicio (`/swagger-ui.html`)
-- [ ] Tests verdes en frío
+- [x] `GET /api/demo/hello` devuelve 200 `"Hello world!"`; registrado en Eureka con puerto aleatorio *(`body = [Hello world!]` como texto plano desde el puerto aleatorio 51295; Eureka: DEMO-SERVICE UP en 51295)*
+- [x] Swagger UI accesible en el puerto aleatorio del servicio (`/swagger-ui.html`) *(`/v3/api-docs` con path `/api/demo/hello` + `/swagger-ui.html` responden en el puerto aleatorio)*
+- [x] Tests verdes en frío *(3/3: unit `HelloControllerTests`, `@WebMvcTest HelloControllerWebTests` con text/plain, contexto `DemoServiceApplicationTests` sin config server ni Eureka)*
 
 **Verification:**
-- [ ] Tests: `./mvnw -B verify -pl demo-service -am`
-- [ ] Manual: `Invoke-RestMethod http://localhost:<demo>/api/demo/hello`
+- [x] Tests: `./mvnw -B verify -pl demo-service -am` (RED→GREEN: sin `HelloController` → `cannot find symbol`; con él → BUILD SUCCESS, 0 checkstyle, 0 SpotBugs)
+- [x] Manual: `Invoke-RestMethod http://localhost:<demo>/api/demo/hello` → `Hello world!`; registro Eureka y swagger-ui verificados con config→eureka→demo arrancados en ese orden (procesos matados por puerto después)
+- [x] Regresión global: `./mvnw -B verify` en verde con los 5 módulos (BUILD SUCCESS, exit 0)
+
+**Nota de trazabilidad:** `spring-cloud-starter-config` incluido según D5 (patrón de config client de T5) aunque la tabla de dependencias de SPEC.md no lo lista para demo-service; la descripción de esta tarea en `tasks/todo.md` sí lo prevé.
 
 **Dependencies:** T2, T4
 **Files likely touched:** `server/demo-service/pom.xml`, `.../application.yml`, `DemoServiceApplication.java`, `adapter/in/web/HelloController.java`, tests, `config-server/.../config/demo-service.yml`

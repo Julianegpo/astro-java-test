@@ -1,0 +1,4 @@
+# demo-service (D3: puerto aleatorio; D18: servlet). Sin datos ni logica propias:
+# solo expone GET /api/demo/hello y se registra en Eureka bajo el nombre demo-service.
+server:
+  port: 0
