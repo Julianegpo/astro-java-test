@@ -12,7 +12,7 @@
 
     <artifactId>demo-service</artifactId>
     <name>demo-service</name>
-    <description>Servicio de ejemplo tras el gateway: GET /api/demo/hello -> "Hello world!" (D6/D18)</description>
+    <description>Sample service behind the gateway: GET /api/demo/hello -> "Hello world!" (D6/D18)</description>
 
     <dependencies>
         <dependency>

@@ -19,8 +19,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
- * Emite JWT RS256 (D14): valida credenciales contra H2 (D16) y firma con la clave privada del
- * config server (D21); TTL = app.jwt.expiration-seconds (D19).
+ * Issues RS256 JWTs (D14): validates credentials against H2 (D16) and signs with the private key
+ * from the config server (D21); TTL = app.jwt.expiration-seconds (D19).
  */
 @Service
 public final class TokenService {
@@ -41,7 +41,7 @@ public final class TokenService {
     this.expirationSeconds = expirationSeconds;
   }
 
-  /** Valida credenciales y emite el token; entradas inválidas o desconocidas → 401 vía advice. */
+  /** Validates credentials and issues the token; invalid or unknown input → 401 via the advice. */
   public TokenResponse issue(String username, String rawPassword) {
     if (username == null || username.isBlank() || rawPassword == null) {
       throw new InvalidCredentialsException();
@@ -80,7 +80,7 @@ public final class TokenService {
       byte[] der = Base64.getDecoder().decode(base64);
       return KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(der));
     } catch (GeneralSecurityException | IllegalArgumentException e) {
-      throw new IllegalStateException("app.jwt.private-key no es una clave RSA PKCS#8 valida", e);
+      throw new IllegalStateException("app.jwt.private-key is not a valid RSA PKCS#8 key", e);
     }
   }
 }

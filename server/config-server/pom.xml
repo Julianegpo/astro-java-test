@@ -12,7 +12,7 @@
 
     <artifactId>config-server</artifactId>
     <name>config-server</name>
-    <description>Spring Cloud Config Server (backend native - config por codigo en este repo, D4)</description>
+    <description>Spring Cloud Config Server (native backend - config as code in this repo, D4)</description>
 
     <dependencies>
         <dependency>

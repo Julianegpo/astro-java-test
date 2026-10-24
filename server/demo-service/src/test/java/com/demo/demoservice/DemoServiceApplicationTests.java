@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
 
-/** Contexto en frio: sin config server ni Eureka (shadow de src/test/resources). */
+/** Cold context: no config server nor Eureka (shadow from src/test/resources). */
 @SpringBootTest
 class DemoServiceApplicationTests {
 

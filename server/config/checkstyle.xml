@@ -4,9 +4,9 @@
         "https://checkstyle.org/dtds/configuration_1_3.dtd">
 
 <!--
-  Reglas propias del proyecto (T3). deliberadamente cortas: el formato lo lleva
-  google-java-format (Spotless); aqui solo reglas semanticas que no revientan
-  por ruido. severity=error en la raiz => cualquier violacion rompe `verify`.
+  Own project rules (T3). Deliberately short: formatting is handled by
+  google-java-format (Spotless); here only semantic rules that do not fail
+  on noise. severity=error at the root => any violation breaks `verify`.
 -->
 <module name="Checker">
     <property name="charset" value="UTF-8"/>

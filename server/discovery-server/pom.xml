@@ -12,7 +12,7 @@
 
     <artifactId>discovery-server</artifactId>
     <name>discovery-server</name>
-    <description>Eureka Server solitario (1 nodo, D12) - sin config server para evitar ciclos de arranque</description>
+    <description>Solitary Eureka Server (1 node, D12) - no config server to avoid startup cycles</description>
 
     <dependencies>
         <dependency>

@@ -20,17 +20,17 @@ target/
 .classpath
 *.swp
 
-# === SO ===
+# === OS ===
 Thumbs.db
 Desktop.ini
 .DS_Store
 
-# === Entorno ===
+# === Environment ===
 .env
 .env.local
 *.tmp
 
-# === OpenCode agent harness (no es parte del proyecto) ===
+# === OpenCode agent harness (not part of the project) ===
 .agents/
 skills-lock.json
 

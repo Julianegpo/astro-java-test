@@ -9,8 +9,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
- * Seguridad del servicio: stateless y whitelist mínima (D20). La exigencia real del JWT vive en el
- * gateway (D6); aquí solo se protege el resto de rutas por si se expone directo.
+ * Service security: stateless with a minimal whitelist (D20). The real JWT enforcement lives at the
+ * gateway (D6); here the remaining routes are only protected in case of direct exposure.
  */
 @Configuration
 @EnableWebSecurity

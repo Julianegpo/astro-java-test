@@ -1,9 +1,9 @@
-# gateway-server (D3: 8080 fijo; unica puerta de entrada - D6). Rutas lb:// por
-# nombre via Eureka (los servicios usan puerto aleatorio); los 2 bucles api-docs
-# permitiran al swagger agregado del gateway (T10) pedir el OpenAPI de cada servicio.
-# Namespace de Spring Cloud Gateway 4.3.x server.webflux.* verificado contra el
-# metadata del jar: el namespace legacy spring.cloud.gateway.* esta deprecado.
-# La URL de Eureka llega del config comun (config/application.yml).
+# gateway-server (D3: fixed 8080; single entry point - D6). lb:// routes resolved by
+# name via Eureka (the services use random ports); the 2 api-docs loops let the
+# aggregated swagger at the gateway (T10) fetch each service's OpenAPI.
+# Spring Cloud Gateway 4.3.x server.webflux.* namespace verified against the jar
+# metadata: the legacy spring.cloud.gateway.* namespace is deprecated.
+# The Eureka URL arrives from the shared config (config/application.yml).
 server:
   port: 8080
 

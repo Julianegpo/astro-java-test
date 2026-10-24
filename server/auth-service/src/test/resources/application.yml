@@ -1,6 +1,6 @@
-# Test en frío: sustituye al application.yml principal (classpath de test primero).
-# Sin config import ni Eureka => determinista aunque haya servicios corriendo en local.
-# Par RS256 de TEST (desechable, distinto del par DEV del config server).
+# Cold test config: replaces the main application.yml (test classpath comes first).
+# No config import nor Eureka => deterministic even with services running locally.
+# Disposable TEST RS256 pair (private+public), distinct from the DEV pair in the config server.
 spring:
   application:
     name: auth-service

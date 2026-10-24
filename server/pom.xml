@@ -16,10 +16,10 @@
     <version>0.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>build-parent</name>
-    <description>Esqueleto microservicios Spring - unica fuente de versiones (SPEC.md)</description>
+    <description>Spring microservices skeleton - single source of versions (SPEC.md)</description>
 
     <properties>
-        <!-- Compila con la JDK 25 instalada apuntando a Java 21 (D13) -->
+        <!-- Compiles with the installed JDK 25 targeting Java 21 (D13) -->
         <java.version>21</java.version>
         <maven.compiler.release>21</maven.compiler.release>
 
@@ -27,12 +27,12 @@
         <springdoc.version>2.9.1</springdoc.version>
         <lombok.version>1.18.48</lombok.version>
 
-        <!-- QA del build (D10): versiones unicas aqui -->
+        <!-- Build QA (D10): versions pinned here only -->
         <spotless.version>3.10.4</spotless.version>
-        <!-- OJO: gjf >= 1.37.0 cambio Style de enum a record y rompe la glue de
-             Spotless 3.10.4 (NoSuchMethodError Style.valueOf). Fijada a 1.36.1,
-             la version por defecto validada con este plugin.
-             Ver tambien ../.mvn/jvm.config (exports de jdk.compiler, red de seguridad). -->
+        <!-- CAREFUL: gjf >= 1.37.0 moved Style from enum to record and breaks Spotless
+             3.10.4's glue (NoSuchMethodError Style.valueOf). Pinned to 1.36.1,
+             the plugin's own validated default.
+             See also ../.mvn/jvm.config (jdk.compiler exports, safety net). -->
         <google-java-format.version>1.36.1</google-java-format.version>
         <checkstyle-plugin.version>3.6.0</checkstyle-plugin.version>
         <checkstyle.version>14.3.0</checkstyle.version>
@@ -60,7 +60,7 @@
         </dependencies>
     </dependencyManagement>
 
-    <!-- Modulos: se anaden en cada tarea (T2: config-server, T4: discovery-server, ...) -->
+    <!-- Modules: added as each task lands (T2: config-server, T4: discovery-server, ...) -->
     <modules>
         <module>config-server</module>
         <module>discovery-server</module>
@@ -69,7 +69,7 @@
         <module>gateway-server</module>
     </modules>
 
-    <!-- Dependencia de test compartida por todos los modulos (sin <version>: la fija el BOM de Boot) -->
+    <!-- Test dependency shared by every module (no <version>: pinned by Boot's BOM) -->
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -81,9 +81,10 @@
     <build>
         <pluginManagement>
             <plugins>
-                <!-- JDK 23+ desactiva el annotation processing implicito de la classpath
-                     (afecta a nuestra JDK 25 aunque compilamos con release 21): sin proc=full
-                     Lombok no genera getters/setters. Necesario para cualquier modulo con Lombok. -->
+                <!-- JDK 23+ disables the implicit classpath annotation processing
+                     (affects our JDK 25 even though we compile with release 21): without
+                     proc=full Lombok does not generate getters/setters. Needed by any
+                     module using Lombok. -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -92,7 +93,7 @@
                     </configuration>
                 </plugin>
 
-                <!-- Spotless: google-java-format para Java (D10). Aplicar con: ./mvnw spotless:apply -->
+                <!-- Spotless: google-java-format for Java (D10). Apply with: ./mvnw spotless:apply -->
                 <plugin>
                     <groupId>com.diffplug.spotless</groupId>
                     <artifactId>spotless-maven-plugin</artifactId>
@@ -116,7 +117,7 @@
                     </executions>
                 </plugin>
 
-                <!-- Checkstyle: reglas propias en config/checkstyle.xml (tool 14.x por plugin dependency) -->
+                <!-- Checkstyle: own rules in config/checkstyle.xml (tool 14.x via plugin dependency) -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
@@ -145,7 +146,7 @@
                     </executions>
                 </plugin>
 
-                <!-- SpotBugs + FindSecBugs: analisis estatico con reglas de seguridad -->
+                <!-- SpotBugs + FindSecBugs: static analysis with security rules -->
                 <plugin>
                     <groupId>com.github.spotbugs</groupId>
                     <artifactId>spotbugs-maven-plugin</artifactId>
@@ -174,7 +175,7 @@
                     </executions>
                 </plugin>
 
-                <!-- JaCoCo: informe de cobertura en verify (sin gate de minimos todavia) -->
+                <!-- JaCoCo: coverage report in verify (no minimum gate yet) -->
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
@@ -198,7 +199,7 @@
             </plugins>
         </pluginManagement>
 
-        <!-- Activados aqui: se heredaran por todos los modulos hijos -->
+        <!-- Enabled here: inherited by every child module -->
         <plugins>
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>

@@ -1,5 +1,5 @@
-# Test en frio: sustituye al application.yml principal (classpath de test primero).
-# Sin config import ni Eureka => determinista aunque haya servicios corriendo en local.
+# Cold test config: replaces the main application.yml (test classpath comes first).
+# No config import nor Eureka => deterministic even with services running locally.
 spring:
   application:
     name: demo-service

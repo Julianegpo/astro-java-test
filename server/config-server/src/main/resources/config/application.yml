@@ -1,4 +1,4 @@
-# Config comun a todos los servicios (repo nativo - D4/D5)
+# Shared config for every service (native repository - D4/D5)
 eureka:
   client:
     service-url:

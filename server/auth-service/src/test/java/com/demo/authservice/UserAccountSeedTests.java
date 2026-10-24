@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-/** Verifica el seed de data.sql (D16): usuario demo/demo con hash BCrypt real. */
+/** Verifies the data.sql seed (D16): user demo/demo with a real BCrypt hash. */
 @SpringBootTest
 class UserAccountSeedTests {
 

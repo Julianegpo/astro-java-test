@@ -1,10 +1,16 @@
 # Agent Instructions
 
+## Language policy
+
+- Conversation with the user: **Spanish**.
+- Everything written into the repo (code, comments, config annotations, docs, commit
+  messages): **English**.
+
 ## Repo layout
 
 - Single app: `webapp/` — a stock Astro starter (basics template). No monorepo tooling.
 - All commands (npm, astro) run from `webapp/`, not the repo root.
-- Not a git repository — branch/commit/PR steps from skills do not apply until git is initialized.
+- The repo is a git repository (remote: `github.com/Julianegpo/astro-java-test`, branch `main`).
 - Node `>=22.23.4` required (`webapp/package.json` engines); npm with committed `package-lock.json` (not pnpm/yarn).
 - `astro.config.mjs` is empty (framework defaults, dev server on port 4321). `tsconfig.json` extends `astro/tsconfigs/strict`.
 - No test, lint, typecheck, or CI tooling is configured. Don't invent verification commands; `npm run build` is the only real check today.

@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-/** Traduce excepciones del caso de uso a respuestas JSON consistentes. */
+/** Translates use-case exceptions into consistent JSON responses. */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

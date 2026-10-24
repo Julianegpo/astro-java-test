@@ -26,7 +26,7 @@ class AuthServiceApplicationTests {
   @Test
   void contextLoads() {}
 
-  /** Integra en frío: seed H2 + BCrypt + claves de test del classpath de test. */
+  /** Cold integration: H2 seed + BCrypt + test keys from the test classpath. */
   @Test
   void issuesTokenForSeededDemoUserVerifiableWithTestPublicKey() throws Exception {
     TokenResponse response = tokenService.issue("demo", "demo");

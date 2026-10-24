@@ -25,7 +25,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-/** Unit tests (Mockito, sin Spring) de la emisión JWT RS256 (D14/D19). */
+/** Unit tests (Mockito, no Spring) of RS256 JWT issuing (D14/D19). */
 class TokenServiceTests {
 
   private static final long TTL_SECONDS = 3600;

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/** Emisión de tokens (D6/D19): única puerta de entrada del servicio para obtener un JWT. */
+/** Token issuing (D6/D19): the service's single entry point to obtain a JWT. */
 @RestController
 @RequestMapping("/api/auth")
 public class TokenController {

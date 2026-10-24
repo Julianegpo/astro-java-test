@@ -1,11 +1,11 @@
-# Local: solo lo imprescindible para vivir sin config server (D5, degrada con optional:).
-# La URL de Eureka viaja del config server (config/application.yml comun del repo nativo).
+# Local: only what is needed to live without the config server (D5, degrades via optional:).
+# The Eureka URL arrives from the config server (shared config/application.yml of the native repo).
 spring:
   application:
     name: demo-service
   config:
     import: optional:configserver:http://localhost:8888
 
-# Puerto aleatorio tambien en local (D3): si el config server esta caido, sigue cumpliendo
+# Random port also in local mode (D3): if the config server is down, it still holds
 server:
   port: 0

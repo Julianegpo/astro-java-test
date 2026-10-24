@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/** Unico endpoint del servicio de ejemplo (D6): tras el gateway responde "Hello world!". */
+/** Only endpoint of the sample service (D6): behind the gateway it answers "Hello world!". */
 @RestController
 @RequestMapping("/api/demo")
 public class HelloController {

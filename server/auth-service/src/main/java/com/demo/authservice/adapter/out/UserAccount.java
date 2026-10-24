@@ -7,7 +7,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-/** Usuario persistido en H2; seed via schema.sql/data.sql (D16). */
+/** User persisted in H2; seeded via schema.sql/data.sql (D16). */
 @Entity
 @Table(name = "users")
 @Getter

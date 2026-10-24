@@ -12,7 +12,7 @@
 
     <artifactId>auth-service</artifactId>
     <name>auth-service</name>
-    <description>Emision de JWT RS256 (D14/D19) con usuario sembrado en H2 (D16) - T6: token endpoint</description>
+    <description>RS256 JWT issuing (D14/D19) with a user seeded in H2 (D16) - T6: token endpoint</description>
 
     <dependencies>
         <dependency>

@@ -12,8 +12,8 @@ import org.springframework.cloud.gateway.route.RouteDefinitionLocator;
 import reactor.core.publisher.Flux;
 
 /**
- * En produccion las 4 rutas (token, demo y los 2 bucles api-docs) viajan del config server; aqui se
- * declaran en el shadow de test con el MISMO namespace para validar que parsean.
+ * In production the 4 routes (token, demo and the 2 api-docs loops) arrive from the config server;
+ * here they are declared in the test shadow with the SAME namespace to validate that they parse.
  */
 @SpringBootTest
 class GatewayRouteDefinitionsTests {

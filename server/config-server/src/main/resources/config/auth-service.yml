@@ -1,6 +1,6 @@
-# auth-service (D3: puerto aleatorio; D16: H2 en memoria explicita; D19/D21: JWT RS256).
-# Clave privada SOLO-DEV: vive unicamente en este fichero del config nativo; la publica
-# viaja a gateway-server.yml (T8). Cambiar expiration-seconds + reiniciar auth cambia la TTL.
+# auth-service (D3: random port; D16: explicit in-memory H2; D19/D21: RS256 JWT).
+# DEV-ONLY private key: lives only in this file of the native config; the public key
+# travels to gateway-server.yml (T9). Changing expiration-seconds + restarting auth changes the TTL.
 server:
   port: 0
 

@@ -4,7 +4,7 @@ import com.demo.authservice.application.service.UserAccounts;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
-/** Implementación JPA (Spring Data) del puerto {@link UserAccounts}. */
+/** JPA (Spring Data) implementation of the {@link UserAccounts} port. */
 @Service
 public class JpaUserAccounts implements UserAccounts {
 
