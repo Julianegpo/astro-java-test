@@ -2,6 +2,9 @@
 # No config import nor Eureka => deterministic even with services running locally.
 # The 4 config-server routes are replicated here to validate the namespace (4.3.x):
 # spring.cloud.gateway.server.webflux.* (the legacy spring.cloud.gateway.* is deprecated).
+# Each uri is a placeholder: the routes test resolves the default (lb://... exactly like
+# production), while the security E2E injects a local stub URL before the context starts
+# (indexed list properties do not merge across sources, so the URI cannot be overridden).
 spring:
   application:
     name: gateway-server
@@ -13,22 +16,22 @@ spring:
         webflux:
           routes:
             - id: auth-token
-              uri: lb://auth-service
+              uri: ${gateway.stub.base-url:lb://auth-service}
               predicates:
                 - Path=/api/auth/token
                 - Method=POST
             - id: demo-api
-              uri: lb://demo-service
+              uri: ${gateway.stub.base-url:lb://demo-service}
               predicates:
                 - Path=/api/demo/**
             - id: api-docs-auth-service
-              uri: lb://auth-service
+              uri: ${gateway.stub.base-url:lb://auth-service}
               predicates:
                 - Path=/v3/api-docs/auth-service
               filters:
                 - RewritePath=/v3/api-docs/auth-service, /v3/api-docs
             - id: api-docs-demo-service
-              uri: lb://demo-service
+              uri: ${gateway.stub.base-url:lb://demo-service}
               predicates:
                 - Path=/v3/api-docs/demo-service
               filters:
@@ -40,3 +43,47 @@ eureka:
 
 server:
   port: 0
+
+# Disposable TEST RS256 pair (same pair as the auth-service tests): the public key feeds the
+# gateway's JWT decoder; the private key only lets the tests sign tokens like auth-service would.
+app:
+  jwt:
+    private-key: |-
+      -----BEGIN PRIVATE KEY-----
+      MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDDBKqYq4oFGS4j
+      JyLDJvys2ZtnkS8p/MShduXnxGBtyFpj4NsKrohVR414clu0gvbNCaO+rd6k7C0S
+      61Yvrx/tJxzJjFBoc8+TYoicLZWzJQJgSQhI8xH9QxhvUqLo7XuUkAg6+sGzw6ed
+      664T76BbSK1C1oyGKZ6y4H8Urfa/jOFWEYP9rNsGuh/v+ueVfStZIYe0jxeFv8DH
+      LS/MLnSzntt0HfZzmqI/A3jDfWeAEp/INLzvzR2XOnBXjwOTzWNmQyWVPgTyXUNU
+      NPS/dbVy21Cuq4xmZHSpfoBj9uIq82ohqMtFGfQLOcDHQoVhmrpIHlcfKju0utdF
+      b07yrZh7AgMBAAECggEAS+XrBxPr2WQdYqz+iHkJ6bOfGcWVV3/6fuSpQXRaGx/Y
+      nfqLBTM7+ASq+G95ZV168/2GbtV4SzNnr29L0a8Ue9W3DHHBcYVxCelVRYMwOdJz
+      hEmoIcwH+ks8nUbKBGE4sW8E5P9ml7HT8FAjJbsi66PzWonpkuVr0C4zBzdVSuK4
+      uDES8dik5NcV+ui/OvOf02zj/RlCnnHCXSDgMRghe+hM45IkbeUee1Vy4R34ZtWz
+      h+SB5T0WVrQT1aVOhNZWHWlVpaIRRTuu69s/U3O7nMsttcqTJK+WDUiqFWCcNL7h
+      AvXwFKKhhO3o5lksPVCwR9LfWqsLE8A4eqmSp4C/EQKBgQDLaft2qYuwOiZW4mzY
+      HW5bHKTaB66J3Tqv3XBpwYc1ziGtSaHgQrfiORyAlCFzDRQeP+phkFD+CoIcLX6i
+      eswu+TWCRc4kvDIGIVvLIGVCnoi/Y1LUR7ttl7qq4fjpK1nDNlDFKvq+ENvoyEX2
+      Wk/HBW04EhY++VH7+Zw+Hd8CrQKBgQD1bwyQ3MaBw3vt9/LE0WCV/e4e7mfAqyVJ
+      Sopa8tzbVJlgOyfWWy+CF1OvwN1vZH/6TMWC4W6jUMu8EZAGvpWKOTp99qdkAKSQ
+      ILMw+ztqaciORgYv06My5tHzwiknxtIkUkW0xxcE7BmTJABydW2KkiwUvOEu6IrW
+      z5Z4VzEUxwKBgQCXIvnaIwNNPwd5iucAdG2oeNHrxcVjXeLbBJcfnNGPosbW8Fy8
+      OhZSmciZqHZp+4+1IhxNvWLQPpKJySvMIZ1QUY32a1NNbB9m+qYveLSEGTLVsUC7
+      xUh3l0L08M12weUB7Ht65AJF8lTS0utYraWU5G1QOfAZfjnyFHaImL04SQKBgQC5
+      2uoNGOJJiZrjTYvNdzBI5Q3Y5ngy8mc95PB4hsiwXpP2x1UXgd2sCbYZtVb574Tq
+      KhC3V7bMfXaKaFJEiTX8gfHFSW7gz4vOiLSpNtZ7creo5WXx+bXv6dK7YCCCOpEP
+      aC3ZA5pu48tKHU0pX7sf4Cj5Wz66ouXgXTp4zq4gKQKBgQDFdwxtBORc7IS2PL75
+      M8yJdGA3rsGd9veiK1D+W7+UIS1SLg6WGDPp8LjaZ3K2ADISFl+l7lGeHHGS9qZT
+      A1ZYrNdfrqova8l1vqqsYDDc1z2ZW2afndavImmr/RrPoXknxexQAl17UVwb6aBp
+      UPmIga8MGo12VKFywDECXyWBqw==
+      -----END PRIVATE KEY-----
+    public-key: |-
+      -----BEGIN PUBLIC KEY-----
+      MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwwSqmKuKBRkuIyciwyb8
+      rNmbZ5EvKfzEoXbl58RgbchaY+DbCq6IVUeNeHJbtIL2zQmjvq3epOwtEutWL68f
+      7SccyYxQaHPPk2KInC2VsyUCYEkISPMR/UMYb1Ki6O17lJAIOvrBs8OnneuuE++g
+      W0itQtaMhimesuB/FK32v4zhVhGD/azbBrof7/rnlX0rWSGHtI8Xhb/Axy0vzC50
+      s57bdB32c5qiPwN4w31ngBKfyDS8780dlzpwV48Dk81jZkMllT4E8l1DVDT0v3W1
+      cttQrquMZmR0qX6AY/biKvNqIajLRRn0CznAx0KFYZq6SB5XHyo7tLrXRW9O8q2Y
+      ewIDAQAB
+      -----END PUBLIC KEY-----

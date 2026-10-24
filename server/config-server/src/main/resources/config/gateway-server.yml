@@ -34,3 +34,19 @@ spring:
                 - Path=/v3/api-docs/demo-service
               filters:
                 - RewritePath=/v3/api-docs/demo-service, /v3/api-docs
+
+# JWT public key (D21, DEV-ONLY pair): verifies the RS256 signatures that auth-service issues.
+# It matches the private key of auth-service.yml; both are sample local material, not secrets
+# (see "Generate your own key" in server/README.md to replace the pair).
+app:
+  jwt:
+    public-key: |-
+      -----BEGIN PUBLIC KEY-----
+      MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1jZFFmcXPAbKuS1vjxkD
+      DbIpx5OKcYxsdwtfdMZtx/4JCtnS/HZ4y7bowNrQ9THqidgjQQ4F9jX8ovSf1LCg
+      g1aU3+Jmu5SSTjZtFcvqXb1ptN0WoScraWG5Bf+Y3dR51kXgX8O9Q5aeauP31826
+      wgH32Xmc1/ZGzyGO9/SxAHP8xtpUXB5Uu+aZY1ZK3xjru+UwyvINf/ucdfZFE2+q
+      fpNF74YnqqBXDQXQ6PjN1/RLLyFwpf72cocDDIRUpOZUvot3A9gWn4bo+A8lbsKL
+      4aqMNmiHARr7tM7UtD8cbD3v/3Sq+nagre3cg1pXkA274JyEa/Ff/aeAP8FeZ7al
+      vwIDAQAB
+      -----END PUBLIC KEY-----

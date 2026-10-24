@@ -98,7 +98,7 @@ Every task leaves a complete, checkable path (no layer-by-layer building):
 ### Phase 3: Demo + Gateway
 - [x] **T7**: `demo-service`: `GET /api/demo/hello` → `"Hello world!"` + Eureka + config client + springdoc
 - [x] **T8**: `gateway-server`: routes via Eureka (auth/demo + `/v3/api-docs/**` loop) with config from the config server
-- [ ] **T9**: `gateway-server`: RS256 JWT validation (public key from config) + whitelist (D20) + E2E tests (no token 401 / valid token 200 / wrong key 401)
+- [x] **T9**: `gateway-server`: RS256 JWT validation (public key from config) + whitelist (D20) + E2E tests (no token 401 / valid token 200 / wrong key 401)
 
 ### Checkpoint 3 (after T7–T9)
 - [ ] Full flow through the gateway: token → `GET /api/demo/hello` → `Hello world!`; no token → 401

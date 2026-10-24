@@ -214,13 +214,20 @@
 **Description:** Inline public key in `config/gateway-server.yml` (D21) → `NimbusReactiveJwtDecoder` (RS256). `SecurityWebFilterChain`: token-free whitelist (D20: `POST /api/auth/token`, `/swagger-ui/**`, `/v3/api-docs/**`, `/actuator/health`), everything else requires a valid Bearer JWT → otherwise 401. `iss` claims validated against `auth-service`. E2E tests with WebTestClient and a stubbed `demo-service`: no token → 401; token signed with the valid key → 200 `"Hello world!"`; token with a foreign key or expired → 401. Decoder unit tests with a test key.
 
 **Acceptance criteria:**
-- [ ] `GET /api/demo/hello` without token → 401; with valid token → 200 `Hello world!`; badly-signed/expired token → 401
-- [ ] `POST /api/auth/token` and `/swagger-ui/**`, `/v3/api-docs/**`, `/actuator/health` pass without a JWT
-- [ ] Coverage: the chain E2E test (spec success criterion 3) green inside `./mvnw -B verify`
+- [x] `GET /api/demo/hello` without token → 401; with valid token → 200 `Hello world!`; badly-signed/expired token → 401 *(E2E: 5 rejection cases + happy path; manual against 8080: no token → 401, garbage token → 401, valid Bearer → `[Hello world!]`)*
+- [x] `POST /api/auth/token` and `/swagger-ui/**`, `/v3/api-docs/**`, `/actuator/health` pass without a JWT *(manual: POST token → 483-char JWT, `/actuator/health` → UP, `/v3/api-docs/demo-service` → OpenAPI 3.1.0, `/swagger-ui.html` → 200; E2E asserts the same)*
+- [x] Coverage: the chain E2E test (spec success criterion 3) green inside `./mvnw -B verify` *(8 E2E + 4 decoder unit tests = 14/14 gateway tests in the global verify)*
 
 **Verification:**
-- [ ] Tests: `./mvnw -B verify -pl gateway-server -am`
-- [ ] Manual: SPEC.md PowerShell script (token → hello 200; no token → 401) against 8080
+- [x] Tests: `./mvnw -B verify -pl gateway-server -am` *(green; global `./mvnw -B verify` → BUILD SUCCESS, 6/6 modules, exit 0)*
+- [x] Manual: SPEC.md PowerShell script (token → hello 200; no token → 401) against 8080 *(5 services up in order; auth:51104, demo:51100, gateway:8080; killed by listening port afterwards)*
+
+**Findings:**
+- **Indexed list properties do not merge across property sources**: registering `spring.cloud.gateway.server.webflux.routes[N].uri` via `@DynamicPropertySource` shadowed the whole element (empty `predicates` → `@NotEmpty` `BindValidationException` on `GatewayProperties`). Fix: keep the list in the yml and route the URI through a placeholder — `uri: ${gateway.stub.base-url:lb://auth-service}` — so the E2E injects one scalar property while the routes test resolves the production-shaped default.
+- **Reactive decoder builder differs from the servlet one**: `NimbusReactiveJwtDecoder.withPublicKey(...).build()` has no `jwtValidator(...)` (verified with `javap` on spring-security-oauth2-jose 6.5.11) → construct `new NimbusReactiveJwtDecoder(key)` + `setJwtValidator(JwtValidators.createDefaultWithIssuer("auth-service"))`.
+- **`Jwt.getIssuer()` converts the claim to `URL`**: a non-URL issuer (`auth-service`) throws at `getIssuer()`. The issuer validator itself is string-based and fine; tests must assert `getClaimAsString("iss")`.
+- **Boot's default reactive security chain takes over** once `oauth2-resource-server` is on the classpath: everything → 401 and POSTs → 403 (CSRF). The explicit `SecurityConfig` chain (whitelist D20 + CSRF/formLogin/basic disabled) replaces it; this is exactly what the 3 RED tests captured.
+- **`/swagger-ui.html` is not covered by `/swagger-ui/**`**: it only redirects there, so it must be permitted explicitly or the T10 entry URL would 401.
 
 **Dependencies:** T6, T8
 **Files likely touched:** `.../adapter/in/security/SecurityConfig.java`, `.../adapter/in/security/JwtDecoderConfig.java`, `config-server/.../config/gateway-server.yml` (public key), `src/test/java/.../GatewayE2ETests.java`, test keys
