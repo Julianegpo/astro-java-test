@@ -187,13 +187,21 @@
 **Description:** Módulo `gateway-server` (spring-cloud-starter-gateway — **WebFlux** —, eureka-client, spring-cloud-starter-config, springdoc webflux-ui, actuator, lombok). Rutas en `config/gateway-server.yml` (config server, D5): `POST /api/auth/token` → `lb://auth-service`; `/api/demo/**` → `lb://demo-service`; bucle openapi `/v3/api-docs/auth-service` y `/v3/api-docs/demo-service` → `lb://<svc>` con `RewritePath` a `/v3/api-docs` (patrón del demo oficial de springdoc; namespace `spring.cloud.gateway.*` de 2025.0.x). Crear `config/gateway-server.yml` con puerto 8080 y URL de Eureka.
 
 **Acceptance criteria:**
-- [ ] Arranca en 8080 (lee rutas del config server) y enruta a los servicios por nombre (descubre puertos aleatorios vía Eureka)
-- [ ] `GET http://localhost:8080/v3/api-docs/demo-service` devuelve el OpenAPI del demo-service (sin seguridad aún)
-- [ ] Arranque limpio sin warnings fatales de namespace/compatibilidad
+- [x] Arranca en 8080 (lee rutas del config server) y enruta a los servicios por nombre (descubre puertos aleatorios vía Eureka) *(`GET :8080/api/demo/hello` → `Hello world!` vía lb://demo-service:60776 y `POST :8080/api/auth/token` → token 483 chars vía lb://auth-service:58927; el gateway no tiene rutas locales: vinieron del config server)*
+- [x] `GET http://localhost:8080/v3/api-docs/demo-service` devuelve el OpenAPI del demo-service (sin seguridad aún) *(OpenAPI 3.1.0 con path `/api/demo/hello`; también verificado el bucle de auth: `/api/auth/token`)*
+- [x] Arranque limpio sin warnings fatales de namespace/compatibilidad *(namespace `server.webflux` sin avisos; ver hallazgos: quedan warnings NO fatales de deprecación del propio starter en 4.3.x → decisión pendiente del humano)*
 
 **Verification:**
-- [ ] Tests: `./mvnw -B verify -pl gateway-server -am` (contexto)
-- [ ] Manual: arrancar config → eureka → auth → demo → gateway y probar las 3 URLs anteriores
+- [x] Tests: `./mvnw -B verify -pl gateway-server -am` (2/2: contexto en frío + `GatewayRouteDefinitionsTests` que valida que las 4 rutas parsean desde el namespace correcto)
+- [x] Manual: arrancar config → eureka → auth → demo → gateway y probar las 3 URLs *(503 Service Unavailable inicial = registry cache de Eureka (~30 s, misma familia que T6); tras el refresh, todo 200. GATEWAY-SERVER registrado UP:8080)*
+- [x] Regresión global: `./mvnw -B verify` en verde con los 6 módulos (BUILD SUCCESS, exit 0)
+
+**Hallazgos:**
+- **Namespace de Spring Cloud Gateway 4.3.x verificado empíricamente**: extraído `META-INF/spring-configuration-metadata.json` del jar `spring-cloud-gateway-server-4.3.5.jar` del m2 → coexisten `spring.cloud.gateway.*` (legacy, deprecado) y **`spring.cloud.gateway.server.webflux.*`** (actual). Las rutas usan el namespace nuevo. `GatewayRouteDefinitionsTests` es la red de seguridad: si el namespace estuviera mal, no registraría ninguna ruta y el test fallaría en `verify` (no en runtime).
+- **Deprecación del starter en 4.3.x (decisión pendiente del humano)**: `spring-cloud-starter-gateway` loguea en arranque `spring-cloud-starter-gateway is deprecated... use spring-cloud-starter-gateway-server-webflux instead` (y el artifact `spring-cloud-gateway-server` pide `spring-cloud-gateway-server-webflux`). No es fatal (AC3 cumple: "sin warnings fatales") y el módulo queda 100% funcional, pero cambiar el starter toca la tabla de dependencias de SPEC.md → Boundaries ask-first: **preguntar antes de cambiar**.
+- **Timing de Eureka en lb://**: peticiones contra rutas `lb://` en los ~30 s posteriores al arranque dan 503 (response cache del Eureka server); tras el refresh del registry, 200. Mismo fenómeno que el registro stale de T6.
+- **Test de rutas**: `RouteDefinitionLocator.getRouteDefinitions()` devuelve `Flux` (Reactor), no `Stream`; y hay varios beans locator → autowire `List<RouteDefinitionLocator>` + `Flux.fromIterable(...).flatMap(...)`.
+- **Predicado auth**: `Path=/api/auth/token` **+ `Method=POST`** (la SPEC describe POST; con Path solo, GET también enrutaría hacia el auth).
 
 **Dependencies:** T4, T5, T7
 **Files likely touched:** `server/gateway-server/pom.xml`, `.../application.yml`, `GatewayServerApplication.java`, `config-server/.../config/gateway-server.yml`, test de contexto

@@ -1,0 +1,36 @@
+# gateway-server (D3: 8080 fijo; unica puerta de entrada - D6). Rutas lb:// por
+# nombre via Eureka (los servicios usan puerto aleatorio); los 2 bucles api-docs
+# permitiran al swagger agregado del gateway (T10) pedir el OpenAPI de cada servicio.
+# Namespace de Spring Cloud Gateway 4.3.x server.webflux.* verificado contra el
+# metadata del jar: el namespace legacy spring.cloud.gateway.* esta deprecado.
+# La URL de Eureka llega del config comun (config/application.yml).
+server:
+  port: 8080
+
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: auth-token
+              uri: lb://auth-service
+              predicates:
+                - Path=/api/auth/token
+                - Method=POST
+            - id: demo-api
+              uri: lb://demo-service
+              predicates:
+                - Path=/api/demo/**
+            - id: api-docs-auth-service
+              uri: lb://auth-service
+              predicates:
+                - Path=/v3/api-docs/auth-service
+              filters:
+                - RewritePath=/v3/api-docs/auth-service, /v3/api-docs
+            - id: api-docs-demo-service
+              uri: lb://demo-service
+              predicates:
+                - Path=/v3/api-docs/demo-service
+              filters:
+                - RewritePath=/v3/api-docs/demo-service, /v3/api-docs

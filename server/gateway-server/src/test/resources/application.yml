@@ -1,0 +1,42 @@
+# Test en frio: sustituye al application.yml principal (classpath de test primero).
+# Sin config import ni Eureka => determinista aunque haya servicios corriendo en local.
+# Las 4 rutas del config server se replican aqui para validar el namespace (4.3.x):
+# spring.cloud.gateway.server.webflux.* (el legacy spring.cloud.gateway.* esta deprecado).
+spring:
+  application:
+    name: gateway-server
+  cloud:
+    config:
+      enabled: false
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: auth-token
+              uri: lb://auth-service
+              predicates:
+                - Path=/api/auth/token
+                - Method=POST
+            - id: demo-api
+              uri: lb://demo-service
+              predicates:
+                - Path=/api/demo/**
+            - id: api-docs-auth-service
+              uri: lb://auth-service
+              predicates:
+                - Path=/v3/api-docs/auth-service
+              filters:
+                - RewritePath=/v3/api-docs/auth-service, /v3/api-docs
+            - id: api-docs-demo-service
+              uri: lb://demo-service
+              predicates:
+                - Path=/v3/api-docs/demo-service
+              filters:
+                - RewritePath=/v3/api-docs/demo-service, /v3/api-docs
+
+eureka:
+  client:
+    enabled: false
+
+server:
+  port: 0

@@ -97,7 +97,7 @@ Cada tarea deja un camino completo y comprobable (nada de construir por capas):
 
 ### Fase 3: Demo + Gateway
 - [x] **T7**: `demo-service`: `GET /api/demo/hello` → `"Hello world!"` + Eureka + config client + springdoc
-- [ ] **T8**: `gateway-server`: rutas vía Eureka (auth/demo + bucle `/v3/api-docs/**`) con config desde config server
+- [x] **T8**: `gateway-server`: rutas vía Eureka (auth/demo + bucle `/v3/api-docs/**`) con config desde config server
 - [ ] **T9**: `gateway-server`: validación JWT RS256 (pública desde config) + whitelist (D20) + tests E2E (sin token 401 / token válido 200 / clave incorrecta 401)
 
 ### Checkpoint 3 (tras T7–T9)

@@ -66,6 +66,7 @@
         <module>discovery-server</module>
         <module>auth-service</module>
         <module>demo-service</module>
+        <module>gateway-server</module>
     </modules>
 
     <!-- Dependencia de test compartida por todos los modulos (sin <version>: la fija el BOM de Boot) -->

@@ -1,0 +1,11 @@
+# Local: solo lo imprescindible para vivir sin config server (D5, degrada con optional:).
+# Las rutas lb:// viajan del config server (config/gateway-server.yml del repo nativo).
+spring:
+  application:
+    name: gateway-server
+  config:
+    import: optional:configserver:http://localhost:8888
+
+# Puerto 8080 tambien en local (D3): el cliente unicamente ve esta puerta
+server:
+  port: 8080
