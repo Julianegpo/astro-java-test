@@ -80,7 +80,7 @@ Criterios de éxito:
 | `discovery-server` | `spring-cloud-starter-netflix-eureka-server` |
 | `auth-service` | `spring-boot-starter-web`, `-data-jpa`, `h2`, `spring-security-crypto`, `spring-boot-starter-security`, `oauth2-resource-server`, `springdoc-openapi-starter-webmvc-ui`, `actuator`, `lombok`(provided) |
 | `demo-service` | `spring-boot-starter-web`, `spring-cloud-starter-netflix-eureka-client`, `springdoc-openapi-starter-webmvc-ui`, `actuator`, `lombok`(provided) |
-| `gateway-server` | `spring-cloud-starter-gateway`, `spring-cloud-starter-netflix-eureka-client`, `oauth2-resource-server`, `springdoc-openapi-starter-webflux-ui`, `actuator`, `lombok`(provided) |
+| `gateway-server` | `spring-cloud-starter-gateway-server-webflux` (renombre oficial del starter en 4.3.x — el viejo `spring-cloud-starter-gateway` está deprecado y avisa en cada arranque; decisión del humano en T8), `spring-cloud-starter-netflix-eureka-client`, `oauth2-resource-server`, `springdoc-openapi-starter-webflux-ui`, `actuator`, `lombok`(provided) |
 | todos (test) | `spring-boot-starter-test` (incluye Mockito) |
 
 ## Commands
