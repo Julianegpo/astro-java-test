@@ -1,0 +1,4160 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+server/
+  .mvn/
+    wrapper/
+      maven-wrapper.properties
+    jvm.config
+  auth-service/
+    src/
+      main/
+        java/
+          com/
+            demo/
+              authservice/
+                adapter/
+                  in/
+                    web/
+                      ErrorResponse.java
+                      GlobalExceptionHandler.java
+                      SecurityConfig.java
+                      TokenController.java
+                      TokenResponse.java
+                  out/
+                    JpaUserAccounts.java
+                    UserAccount.java
+                    UserAccountRepository.java
+                application/
+                  service/
+                    InvalidCredentialsException.java
+                    TokenService.java
+                    UserAccounts.java
+                AuthServiceApplication.java
+        resources/
+          application.yml
+          data.sql
+          schema.sql
+      test/
+        java/
+          com/
+            demo/
+              authservice/
+                adapter/
+                  in/
+                    web/
+                      TokenControllerTests.java
+                application/
+                  service/
+                    TokenServiceTests.java
+                AuthServiceApplicationTests.java
+                UserAccountSeedTests.java
+        resources/
+          application.yml
+    pom.xml
+  config/
+    checkstyle.xml
+  config-server/
+    src/
+      main/
+        java/
+          com/
+            demo/
+              configserver/
+                ConfigServerApplication.java
+        resources/
+          config/
+            application.yml
+            auth-service.yml
+            demo-service.yml
+            gateway-server.yml
+          application.yml
+      test/
+        java/
+          com/
+            demo/
+              configserver/
+                ConfigServerApplicationTests.java
+    pom.xml
+  demo-service/
+    src/
+      main/
+        java/
+          com/
+            demo/
+              demoservice/
+                adapter/
+                  in/
+                    web/
+                      HelloController.java
+                DemoServiceApplication.java
+        resources/
+          application.yml
+      test/
+        java/
+          com/
+            demo/
+              demoservice/
+                adapter/
+                  in/
+                    web/
+                      HelloControllerTests.java
+                      HelloControllerWebTests.java
+                DemoServiceApplicationTests.java
+        resources/
+          application.yml
+    pom.xml
+  discovery-server/
+    src/
+      main/
+        java/
+          com/
+            demo/
+              discoveryserver/
+                DiscoveryServerApplication.java
+        resources/
+          application.yml
+      test/
+        java/
+          com/
+            demo/
+              discoveryserver/
+                DiscoveryServerApplicationTests.java
+    pom.xml
+  gateway-server/
+    src/
+      main/
+        java/
+          com/
+            demo/
+              gatewayserver/
+                adapter/
+                  in/
+                    security/
+                      JwtDecoderConfig.java
+                      SecurityConfig.java
+                GatewayServerApplication.java
+        resources/
+          application.yml
+      test/
+        java/
+          com/
+            demo/
+              gatewayserver/
+                adapter/
+                  in/
+                    security/
+                      JwtDecoderConfigTests.java
+                GatewayRouteDefinitionsTests.java
+                GatewaySecurityE2ETests.java
+                GatewayServerApplicationTests.java
+                GatewaySwaggerAggregationTests.java
+                TestTokens.java
+        resources/
+          application.yml
+    pom.xml
+  lombok.config
+  mvnw
+  mvnw.cmd
+  pom.xml
+  README.md
+tasks/
+  plan.md
+  todo.md
+webapp/
+  public/
+    favicon.ico
+    favicon.svg
+  src/
+    assets/
+      astro.svg
+      background.svg
+    components/
+      Welcome.astro
+    layouts/
+      Layout.astro
+    pages/
+      index.astro
+  .gitignore
+  AGENTS.md
+  astro.config.mjs
+  package.json
+  README.md
+  tsconfig.json
+.gitignore
+AGENTS.md
+GUIA.md
+README.md
+SPEC.md
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="server/gateway-server/src/test/java/com/demo/gatewayserver/GatewaySwaggerAggregationTests.java">
+package com.demo.gatewayserver;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.web.reactive.server.WebTestClient;
+
+/**
+ * Aggregated Swagger at the gateway (T10, D17/D22): the UI entry point is served and its
+ * swagger-config advertises the OpenAPI documents of both services through the api-docs loops
+ * (relative URLs only — services are discovered by name, never by port).
+ */
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureWebTestClient
+class GatewaySwaggerAggregationTests {
+
+  @Autowired private WebTestClient webTestClient;
+
+  @Test
+  void swaggerUiIsServedAtTheGatewayEntryPoint() {
+    webTestClient.get().uri("/swagger-ui/index.html").exchange().expectStatus().isOk();
+  }
+
+  @Test
+  void swaggerConfigListsAuthAndDemoServiceDocs() {
+    webTestClient
+        .get()
+        .uri("/v3/api-docs/swagger-config")
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody(String.class)
+        .value(
+            body -> {
+              assertThat(body).contains("/v3/api-docs/auth-service");
+              assertThat(body).contains("/v3/api-docs/demo-service");
+            });
+  }
+}
+</file>
+
+<file path="server/.mvn/wrapper/maven-wrapper.properties">
+wrapperVersion=3.3.4
+distributionType=only-script
+distributionUrl=https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.16/apache-maven-3.9.16-bin.zip
+</file>
+
+<file path="server/.mvn/jvm.config">
+--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED
+--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED
+--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED
+--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED
+--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED
+--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED
+--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED
+</file>
+
+<file path="server/auth-service/src/main/java/com/demo/authservice/adapter/out/UserAccountRepository.java">
+package com.demo.authservice.adapter.out;
+
+import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UserAccountRepository extends JpaRepository<UserAccount, String> {
+
+  Optional<UserAccount> findByUsername(String username);
+}
+</file>
+
+<file path="server/auth-service/src/main/java/com/demo/authservice/AuthServiceApplication.java">
+package com.demo.authservice;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class AuthServiceApplication {
+
+  public static void main(String[] args) {
+    SpringApplication.run(AuthServiceApplication.class, args);
+  }
+}
+</file>
+
+<file path="server/auth-service/src/main/resources/schema.sql">
+CREATE TABLE users (
+    username      VARCHAR(64)  PRIMARY KEY,
+    password_hash VARCHAR(100) NOT NULL,
+    roles         VARCHAR(255) NOT NULL
+);
+</file>
+
+<file path="server/auth-service/src/test/java/com/demo/authservice/adapter/in/web/TokenControllerTests.java">
+package com.demo.authservice.adapter.in.web;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.demo.authservice.application.service.InvalidCredentialsException;
+import com.demo.authservice.application.service.TokenService;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+
+@WebMvcTest(TokenController.class)
+@Import(SecurityConfig.class)
+class TokenControllerTests {
+
+  private static final String TOKEN_URL = "/api/auth/token";
+
+  @Autowired private MockMvc mockMvc;
+
+  @MockitoBean private TokenService tokenService;
+
+  @Test
+  void issuesTokenForValidCredentials() throws Exception {
+    when(tokenService.issue("demo", "demo"))
+        .thenReturn(TokenResponse.builder().token("jwt-token").expiresIn(3600).build());
+
+    mockMvc
+        .perform(
+            post(TOKEN_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\":\"demo\",\"password\":\"demo\"}"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.token").value("jwt-token"))
+        .andExpect(jsonPath("$.expiresIn").value(3600));
+  }
+
+  @Test
+  void rejectsInvalidCredentialsWith401AndErrorBody() throws Exception {
+    when(tokenService.issue("demo", "wrong")).thenThrow(new InvalidCredentialsException());
+
+    mockMvc
+        .perform(
+            post(TOKEN_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\":\"demo\",\"password\":\"wrong\"}"))
+        .andExpect(status().isUnauthorized())
+        .andExpect(jsonPath("$.code").value(401))
+        .andExpect(jsonPath("$.message").value("Invalid credentials"));
+  }
+
+  @Test
+  void rejectsMissingBodyWith400() throws Exception {
+    mockMvc
+        .perform(post(TOKEN_URL).contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isBadRequest());
+  }
+}
+</file>
+
+<file path="server/config-server/src/main/java/com/demo/configserver/ConfigServerApplication.java">
+package com.demo.configserver;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.config.server.EnableConfigServer;
+
+@SpringBootApplication
+@EnableConfigServer
+public class ConfigServerApplication {
+
+  public static void main(String[] args) {
+    SpringApplication.run(ConfigServerApplication.class, args);
+  }
+}
+</file>
+
+<file path="server/config-server/src/main/resources/application.yml">
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/config
+</file>
+
+<file path="server/config-server/src/test/java/com/demo/configserver/ConfigServerApplicationTests.java">
+package com.demo.configserver;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class ConfigServerApplicationTests {
+
+  @Test
+  void contextLoads() {}
+}
+</file>
+
+<file path="server/demo-service/src/main/java/com/demo/demoservice/DemoServiceApplication.java">
+package com.demo.demoservice;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class DemoServiceApplication {
+
+  public static void main(String[] args) {
+    SpringApplication.run(DemoServiceApplication.class, args);
+  }
+}
+</file>
+
+<file path="server/demo-service/src/test/java/com/demo/demoservice/adapter/in/web/HelloControllerTests.java">
+package com.demo.demoservice.adapter.in.web;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Test;
+
+class HelloControllerTests {
+
+  private final HelloController controller = new HelloController();
+
+  @Test
+  void helloReturnsHelloWorld() {
+    assertThat(controller.hello()).isEqualTo("Hello world!");
+  }
+}
+</file>
+
+<file path="server/demo-service/src/test/java/com/demo/demoservice/adapter/in/web/HelloControllerWebTests.java">
+package com.demo.demoservice.adapter.in.web;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+@WebMvcTest(HelloController.class)
+class HelloControllerWebTests {
+
+  @Autowired private MockMvc mockMvc;
+
+  @Test
+  void getHelloReturnsPlainTextHelloWorld() throws Exception {
+    mockMvc
+        .perform(get("/api/demo/hello"))
+        .andExpect(status().isOk())
+        .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_PLAIN_VALUE))
+        .andExpect(content().string("Hello world!"));
+  }
+}
+</file>
+
+<file path="server/discovery-server/src/main/java/com/demo/discoveryserver/DiscoveryServerApplication.java">
+package com.demo.discoveryserver;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
+
+@SpringBootApplication
+@EnableEurekaServer
+public class DiscoveryServerApplication {
+
+  public static void main(String[] args) {
+    SpringApplication.run(DiscoveryServerApplication.class, args);
+  }
+}
+</file>
+
+<file path="server/discovery-server/src/test/java/com/demo/discoveryserver/DiscoveryServerApplicationTests.java">
+package com.demo.discoveryserver;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class DiscoveryServerApplicationTests {
+
+  @Test
+  void contextLoads() {}
+}
+</file>
+
+<file path="server/gateway-server/src/main/java/com/demo/gatewayserver/adapter/in/security/JwtDecoderConfig.java">
+package com.demo.gatewayserver.adapter.in.security;
+
+import java.security.GeneralSecurityException;
+import java.security.KeyFactory;
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.jwt.JwtValidators;
+import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
+import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
+
+/**
+ * Builds the gateway's RS256 decoder (D14/D21) from the public key that travels in the config
+ * server (`gateway-server.yml`). Timestamps and the `iss=auth-service` claim are validated (D19).
+ */
+@Configuration
+public class JwtDecoderConfig {
+
+  /** Issuer that only auth-service can use when signing tokens. */
+  private static final String EXPECTED_ISSUER = "auth-service";
+
+  @Bean
+  ReactiveJwtDecoder reactiveJwtDecoder(@Value("${app.jwt.public-key}") String publicKeyPem)
+      throws GeneralSecurityException {
+    NimbusReactiveJwtDecoder decoder = new NimbusReactiveJwtDecoder(parsePublicKey(publicKeyPem));
+    decoder.setJwtValidator(JwtValidators.createDefaultWithIssuer(EXPECTED_ISSUER));
+    return decoder;
+  }
+
+  private static RSAPublicKey parsePublicKey(String pem) throws GeneralSecurityException {
+    String body =
+        pem.replace("-----BEGIN PUBLIC KEY-----", "")
+            .replace("-----END PUBLIC KEY-----", "")
+            .replaceAll("\\s", "");
+    byte[] der = Base64.getDecoder().decode(body);
+    return (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(der));
+  }
+}
+</file>
+
+<file path="server/gateway-server/src/main/java/com/demo/gatewayserver/adapter/in/security/SecurityConfig.java">
+package com.demo.gatewayserver.adapter.in.security;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+
+/**
+ * Security at the gateway (D6/D20): every exchange demands a valid RS256 Bearer JWT, except the
+ * whitelist (token issuing, swagger, api docs and health). Missing, expired or badly signed tokens
+ * end in 401. Stateless: CSRF and form/basic logins are off (D18).
+ */
+@Configuration
+public class SecurityConfig {
+
+  @Bean
+  SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+    return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
+        .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
+        .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
+        .authorizeExchange(
+            exchanges ->
+                exchanges
+                    .pathMatchers(HttpMethod.POST, "/api/auth/token")
+                    .permitAll()
+                    .pathMatchers(
+                        "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/actuator/health")
+                    .permitAll()
+                    .anyExchange()
+                    .authenticated())
+        .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+        .build();
+  }
+}
+</file>
+
+<file path="server/gateway-server/src/main/java/com/demo/gatewayserver/GatewayServerApplication.java">
+package com.demo.gatewayserver;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class GatewayServerApplication {
+
+  public static void main(String[] args) {
+    SpringApplication.run(GatewayServerApplication.class, args);
+  }
+}
+</file>
+
+<file path="server/gateway-server/src/test/java/com/demo/gatewayserver/adapter/in/security/JwtDecoderConfigTests.java">
+package com.demo.gatewayserver.adapter.in.security;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import com.demo.gatewayserver.TestTokens;
+import java.security.PrivateKey;
+import java.time.Duration;
+import java.time.Instant;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtException;
+import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
+
+/**
+ * Direct tests of the gateway's RS256 decoder (D14/D21): the test public key accepts tokens signed
+ * with the test private key and rejects foreign signatures, expiry and a foreign issuer.
+ */
+@SpringBootTest
+class JwtDecoderConfigTests {
+
+  @Autowired private ReactiveJwtDecoder decoder;
+
+  @Value("${app.jwt.private-key}")
+  private String privateKeyPem;
+
+  @Test
+  void decodesTokenSignedWithTheTestKey() throws Exception {
+    PrivateKey testKey = TestTokens.parsePrivateKey(privateKeyPem);
+    String token = TestTokens.sign(testKey, "auth-service", Instant.now().plusSeconds(3600));
+
+    Jwt decoded = decoder.decode(token).block(Duration.ofSeconds(5));
+
+    assertThat(decoded).isNotNull();
+    assertThat(decoded.getSubject()).isEqualTo("demo");
+    assertThat(decoded.getClaimAsString("iss")).isEqualTo("auth-service");
+  }
+
+  @Test
+  void rejectsTokenSignedWithAForeignKey() throws Exception {
+    PrivateKey testKey = TestTokens.parsePrivateKey(privateKeyPem);
+    PrivateKey foreignKey = foreignKey();
+    String token = TestTokens.sign(foreignKey, "auth-service", Instant.now().plusSeconds(3600));
+
+    assertThatThrownBy(() -> decoder.decode(token).block(Duration.ofSeconds(5)))
+        .isInstanceOf(JwtException.class);
+  }
+
+  @Test
+  void rejectsExpiredToken() throws Exception {
+    PrivateKey testKey = TestTokens.parsePrivateKey(privateKeyPem);
+    String token = TestTokens.sign(testKey, "auth-service", Instant.now().minusSeconds(60));
+
+    assertThatThrownBy(() -> decoder.decode(token).block(Duration.ofSeconds(5)))
+        .isInstanceOf(JwtException.class);
+  }
+
+  @Test
+  void rejectsTokenIssuedByAnotherIssuer() throws Exception {
+    PrivateKey testKey = TestTokens.parsePrivateKey(privateKeyPem);
+    String token = TestTokens.sign(testKey, "someone-else", Instant.now().plusSeconds(3600));
+
+    assertThatThrownBy(() -> decoder.decode(token).block(Duration.ofSeconds(5)))
+        .isInstanceOf(JwtException.class);
+  }
+
+  private static PrivateKey foreignKey() throws Exception {
+    java.security.KeyPairGenerator generator = java.security.KeyPairGenerator.getInstance("RSA");
+    generator.initialize(2048);
+    return generator.generateKeyPair().getPrivate();
+  }
+}
+</file>
+
+<file path="server/gateway-server/src/test/java/com/demo/gatewayserver/GatewaySecurityE2ETests.java">
+package com.demo.gatewayserver;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.sun.net.httpserver.HttpServer;
+import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
+import java.security.PrivateKey;
+import java.time.Instant;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.web.reactive.server.WebTestClient;
+
+/**
+ * Chain E2E (spec success criterion 3): the gateway must reject requests without a valid RS256 JWT
+ * and let the D20 whitelist through. The auth and demo backends are replaced by a local stub, so
+ * the test runs cold with no Eureka, no config server and no real service.
+ */
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureWebTestClient
+class GatewaySecurityE2ETests {
+
+  private static HttpServer stub;
+
+  @Autowired private WebTestClient webTestClient;
+
+  @Value("${app.jwt.private-key}")
+  private String privateKeyPem;
+
+  /**
+   * Resolves the `gateway.stub.base-url` placeholder used by the test routes to this test's local
+   * stub, so every request is answered without Eureka nor a real service. The default in the yml
+   * (lb://...) keeps the routes-definition test shaped exactly like production.
+   */
+  @DynamicPropertySource
+  static void pointRoutesAtTheStub(DynamicPropertyRegistry registry) throws Exception {
+    stub = HttpServer.create(new InetSocketAddress(0), 0);
+    stub.createContext(
+        "/",
+        exchange -> {
+          byte[] body = "Hello world!".getBytes(StandardCharsets.UTF_8);
+          exchange.getResponseHeaders().add("Content-Type", "text/plain");
+          exchange.sendResponseHeaders(200, body.length);
+          exchange.getResponseBody().write(body);
+          exchange.close();
+        });
+    stub.start();
+    registry.add("gateway.stub.base-url", () -> "http://localhost:" + stub.getAddress().getPort());
+  }
+
+  @AfterAll
+  static void stopStub() {
+    if (stub != null) {
+      stub.stop(0);
+    }
+  }
+
+  @Test
+  void protectedRouteWithoutTokenIsRejected() {
+    webTestClient
+        .get()
+        .uri("/api/demo/hello")
+        .exchange()
+        .expectStatus()
+        .isEqualTo(HttpStatus.UNAUTHORIZED);
+  }
+
+  @Test
+  void protectedRouteWithValidTokenReturnsHelloWorld() throws Exception {
+    PrivateKey testKey = TestTokens.parsePrivateKey(privateKeyPem);
+    String token = TestTokens.sign(testKey, "auth-service", Instant.now().plusSeconds(3600));
+
+    webTestClient
+        .get()
+        .uri("/api/demo/hello")
+        .header("Authorization", "Bearer " + token)
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody(String.class)
+        .isEqualTo("Hello world!");
+  }
+
+  @Test
+  void protectedRouteWithForeignKeyIsRejected() throws Exception {
+    PrivateKey foreignKey = foreignKey();
+    String token = TestTokens.sign(foreignKey, "auth-service", Instant.now().plusSeconds(3600));
+
+    webTestClient
+        .get()
+        .uri("/api/demo/hello")
+        .header("Authorization", "Bearer " + token)
+        .exchange()
+        .expectStatus()
+        .isEqualTo(HttpStatus.UNAUTHORIZED);
+  }
+
+  @Test
+  void protectedRouteWithExpiredTokenIsRejected() throws Exception {
+    PrivateKey testKey = TestTokens.parsePrivateKey(privateKeyPem);
+    String token = TestTokens.sign(testKey, "auth-service", Instant.now().minusSeconds(60));
+
+    webTestClient
+        .get()
+        .uri("/api/demo/hello")
+        .header("Authorization", "Bearer " + token)
+        .exchange()
+        .expectStatus()
+        .isEqualTo(HttpStatus.UNAUTHORIZED);
+  }
+
+  @Test
+  void protectedRouteWithForeignIssuerIsRejected() throws Exception {
+    PrivateKey testKey = TestTokens.parsePrivateKey(privateKeyPem);
+    String token = TestTokens.sign(testKey, "someone-else", Instant.now().plusSeconds(3600));
+
+    webTestClient
+        .get()
+        .uri("/api/demo/hello")
+        .header("Authorization", "Bearer " + token)
+        .exchange()
+        .expectStatus()
+        .isEqualTo(HttpStatus.UNAUTHORIZED);
+  }
+
+  @Test
+  void tokenEndpointIsWhitelisted() {
+    webTestClient.post().uri("/api/auth/token").exchange().expectStatus().isOk();
+  }
+
+  @Test
+  void healthIsWhitelisted() {
+    webTestClient.get().uri("/actuator/health").exchange().expectStatus().isOk();
+  }
+
+  @Test
+  void swaggerAndApiDocsAreWhitelisted() {
+    webTestClient
+        .get()
+        .uri("/swagger-ui.html")
+        .exchange()
+        .expectStatus()
+        .value(status -> assertThat(status).isNotEqualTo(401));
+    webTestClient.get().uri("/v3/api-docs/demo-service").exchange().expectStatus().isOk();
+  }
+
+  private static PrivateKey foreignKey() throws Exception {
+    java.security.KeyPairGenerator generator = java.security.KeyPairGenerator.getInstance("RSA");
+    generator.initialize(2048);
+    return generator.generateKeyPair().getPrivate();
+  }
+}
+</file>
+
+<file path="server/gateway-server/src/test/java/com/demo/gatewayserver/TestTokens.java">
+package com.demo.gatewayserver;
+
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.crypto.RSASSASigner;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
+import java.security.GeneralSecurityException;
+import java.security.KeyFactory;
+import java.security.PrivateKey;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.time.Instant;
+import java.util.Base64;
+import java.util.Date;
+
+/** Test fixture: signs disposable RS256 tokens exactly the way auth-service would. */
+public final class TestTokens {
+
+  private TestTokens() {}
+
+  /** Parses a PKCS#8 PEM private key (the shape stored in the test application.yml). */
+  public static PrivateKey parsePrivateKey(String pem) throws GeneralSecurityException {
+    String body =
+        pem.replace("-----BEGIN PRIVATE KEY-----", "")
+            .replace("-----END PRIVATE KEY-----", "")
+            .replaceAll("\\s", "");
+    byte[] der = Base64.getDecoder().decode(body);
+    return KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(der));
+  }
+
+  /** Signs a token with the given key, issuer and expiration (subject demo, ROLE_USER). */
+  public static String sign(PrivateKey key, String issuer, Instant expiration)
+      throws JOSEException {
+    JWTClaimsSet claims =
+        new JWTClaimsSet.Builder()
+            .subject("demo")
+            .claim("roles", "ROLE_USER")
+            .issuer(issuer)
+            .issueTime(Date.from(Instant.now()))
+            .expirationTime(Date.from(expiration))
+            .build();
+    SignedJWT jwt = new SignedJWT(new JWSHeader(JWSAlgorithm.RS256), claims);
+    jwt.sign(new RSASSASigner(key));
+    return jwt.serialize();
+  }
+}
+</file>
+
+<file path="server/mvnw">
+#!/bin/sh
+# ----------------------------------------------------------------------------
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+# ----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
+# Apache Maven Wrapper startup batch script, version 3.3.4
+#
+# Optional ENV vars
+# -----------------
+#   JAVA_HOME - location of a JDK home dir, required when download maven via java source
+#   MVNW_REPOURL - repo url base for downloading maven distribution
+#   MVNW_USERNAME/MVNW_PASSWORD - user and password for downloading maven
+#   MVNW_VERBOSE - true: enable verbose log; debug: trace the mvnw script; others: silence the output
+# ----------------------------------------------------------------------------
+
+set -euf
+[ "${MVNW_VERBOSE-}" != debug ] || set -x
+
+# OS specific support.
+native_path() { printf %s\\n "$1"; }
+case "$(uname)" in
+CYGWIN* | MINGW*)
+  [ -z "${JAVA_HOME-}" ] || JAVA_HOME="$(cygpath --unix "$JAVA_HOME")"
+  native_path() { cygpath --path --windows "$1"; }
+  ;;
+esac
+
+# set JAVACMD and JAVACCMD
+set_java_home() {
+  # For Cygwin and MinGW, ensure paths are in Unix format before anything is touched
+  if [ -n "${JAVA_HOME-}" ]; then
+    if [ -x "$JAVA_HOME/jre/sh/java" ]; then
+      # IBM's JDK on AIX uses strange locations for the executables
+      JAVACMD="$JAVA_HOME/jre/sh/java"
+      JAVACCMD="$JAVA_HOME/jre/sh/javac"
+    else
+      JAVACMD="$JAVA_HOME/bin/java"
+      JAVACCMD="$JAVA_HOME/bin/javac"
+
+      if [ ! -x "$JAVACMD" ] || [ ! -x "$JAVACCMD" ]; then
+        echo "The JAVA_HOME environment variable is not defined correctly, so mvnw cannot run." >&2
+        echo "JAVA_HOME is set to \"$JAVA_HOME\", but \"\$JAVA_HOME/bin/java\" or \"\$JAVA_HOME/bin/javac\" does not exist." >&2
+        return 1
+      fi
+    fi
+  else
+    JAVACMD="$(
+      'set' +e
+      'unset' -f command 2>/dev/null
+      'command' -v java
+    )" || :
+    JAVACCMD="$(
+      'set' +e
+      'unset' -f command 2>/dev/null
+      'command' -v javac
+    )" || :
+
+    if [ ! -x "${JAVACMD-}" ] || [ ! -x "${JAVACCMD-}" ]; then
+      echo "The java/javac command does not exist in PATH nor is JAVA_HOME set, so mvnw cannot run." >&2
+      return 1
+    fi
+  fi
+}
+
+# hash string like Java String::hashCode
+hash_string() {
+  str="${1:-}" h=0
+  while [ -n "$str" ]; do
+    char="${str%"${str#?}"}"
+    h=$(((h * 31 + $(LC_CTYPE=C printf %d "'$char")) % 4294967296))
+    str="${str#?}"
+  done
+  printf %x\\n $h
+}
+
+verbose() { :; }
+[ "${MVNW_VERBOSE-}" != true ] || verbose() { printf %s\\n "${1-}"; }
+
+die() {
+  printf %s\\n "$1" >&2
+  exit 1
+}
+
+trim() {
+  # MWRAPPER-139:
+  #   Trims trailing and leading whitespace, carriage returns, tabs, and linefeeds.
+  #   Needed for removing poorly interpreted newline sequences when running in more
+  #   exotic environments such as mingw bash on Windows.
+  printf "%s" "${1}" | tr -d '[:space:]'
+}
+
+scriptDir="$(dirname "$0")"
+scriptName="$(basename "$0")"
+
+# parse distributionUrl and optional distributionSha256Sum, requires .mvn/wrapper/maven-wrapper.properties
+while IFS="=" read -r key value; do
+  case "${key-}" in
+  distributionUrl) distributionUrl=$(trim "${value-}") ;;
+  distributionSha256Sum) distributionSha256Sum=$(trim "${value-}") ;;
+  esac
+done <"$scriptDir/.mvn/wrapper/maven-wrapper.properties"
+[ -n "${distributionUrl-}" ] || die "cannot read distributionUrl property in $scriptDir/.mvn/wrapper/maven-wrapper.properties"
+
+case "${distributionUrl##*/}" in
+maven-mvnd-*bin.*)
+  MVN_CMD=mvnd.sh _MVNW_REPO_PATTERN=/maven/mvnd/
+  case "${PROCESSOR_ARCHITECTURE-}${PROCESSOR_ARCHITEW6432-}:$(uname -a)" in
+  *AMD64:CYGWIN* | *AMD64:MINGW*) distributionPlatform=windows-amd64 ;;
+  :Darwin*x86_64) distributionPlatform=darwin-amd64 ;;
+  :Darwin*arm64) distributionPlatform=darwin-aarch64 ;;
+  :Linux*x86_64*) distributionPlatform=linux-amd64 ;;
+  *)
+    echo "Cannot detect native platform for mvnd on $(uname)-$(uname -m), use pure java version" >&2
+    distributionPlatform=linux-amd64
+    ;;
+  esac
+  distributionUrl="${distributionUrl%-bin.*}-$distributionPlatform.zip"
+  ;;
+maven-mvnd-*) MVN_CMD=mvnd.sh _MVNW_REPO_PATTERN=/maven/mvnd/ ;;
+*) MVN_CMD="mvn${scriptName#mvnw}" _MVNW_REPO_PATTERN=/org/apache/maven/ ;;
+esac
+
+# apply MVNW_REPOURL and calculate MAVEN_HOME
+# maven home pattern: ~/.m2/wrapper/dists/{apache-maven-<version>,maven-mvnd-<version>-<platform>}/<hash>
+[ -z "${MVNW_REPOURL-}" ] || distributionUrl="$MVNW_REPOURL$_MVNW_REPO_PATTERN${distributionUrl#*"$_MVNW_REPO_PATTERN"}"
+distributionUrlName="${distributionUrl##*/}"
+distributionUrlNameMain="${distributionUrlName%.*}"
+distributionUrlNameMain="${distributionUrlNameMain%-bin}"
+MAVEN_USER_HOME="${MAVEN_USER_HOME:-${HOME}/.m2}"
+MAVEN_HOME="${MAVEN_USER_HOME}/wrapper/dists/${distributionUrlNameMain-}/$(hash_string "$distributionUrl")"
+
+exec_maven() {
+  unset MVNW_VERBOSE MVNW_USERNAME MVNW_PASSWORD MVNW_REPOURL || :
+  exec "$MAVEN_HOME/bin/$MVN_CMD" "$@" || die "cannot exec $MAVEN_HOME/bin/$MVN_CMD"
+}
+
+if [ -d "$MAVEN_HOME" ]; then
+  verbose "found existing MAVEN_HOME at $MAVEN_HOME"
+  exec_maven "$@"
+fi
+
+case "${distributionUrl-}" in
+*?-bin.zip | *?maven-mvnd-?*-?*.zip) ;;
+*) die "distributionUrl is not valid, must match *-bin.zip or maven-mvnd-*.zip, but found '${distributionUrl-}'" ;;
+esac
+
+# prepare tmp dir
+if TMP_DOWNLOAD_DIR="$(mktemp -d)" && [ -d "$TMP_DOWNLOAD_DIR" ]; then
+  clean() { rm -rf -- "$TMP_DOWNLOAD_DIR"; }
+  trap clean HUP INT TERM EXIT
+else
+  die "cannot create temp dir"
+fi
+
+mkdir -p -- "${MAVEN_HOME%/*}"
+
+# Download and Install Apache Maven
+verbose "Couldn't find MAVEN_HOME, downloading and installing it ..."
+verbose "Downloading from: $distributionUrl"
+verbose "Downloading to: $TMP_DOWNLOAD_DIR/$distributionUrlName"
+
+# select .zip or .tar.gz
+if ! command -v unzip >/dev/null; then
+  distributionUrl="${distributionUrl%.zip}.tar.gz"
+  distributionUrlName="${distributionUrl##*/}"
+fi
+
+# verbose opt
+__MVNW_QUIET_WGET=--quiet __MVNW_QUIET_CURL=--silent __MVNW_QUIET_UNZIP=-q __MVNW_QUIET_TAR=''
+[ "${MVNW_VERBOSE-}" != true ] || __MVNW_QUIET_WGET='' __MVNW_QUIET_CURL='' __MVNW_QUIET_UNZIP='' __MVNW_QUIET_TAR=v
+
+# normalize http auth
+case "${MVNW_PASSWORD:+has-password}" in
+'') MVNW_USERNAME='' MVNW_PASSWORD='' ;;
+has-password) [ -n "${MVNW_USERNAME-}" ] || MVNW_USERNAME='' MVNW_PASSWORD='' ;;
+esac
+
+if [ -z "${MVNW_USERNAME-}" ] && command -v wget >/dev/null; then
+  verbose "Found wget ... using wget"
+  wget ${__MVNW_QUIET_WGET:+"$__MVNW_QUIET_WGET"} "$distributionUrl" -O "$TMP_DOWNLOAD_DIR/$distributionUrlName" || die "wget: Failed to fetch $distributionUrl"
+elif [ -z "${MVNW_USERNAME-}" ] && command -v curl >/dev/null; then
+  verbose "Found curl ... using curl"
+  curl ${__MVNW_QUIET_CURL:+"$__MVNW_QUIET_CURL"} -f -L -o "$TMP_DOWNLOAD_DIR/$distributionUrlName" "$distributionUrl" || die "curl: Failed to fetch $distributionUrl"
+elif set_java_home; then
+  verbose "Falling back to use Java to download"
+  javaSource="$TMP_DOWNLOAD_DIR/Downloader.java"
+  targetZip="$TMP_DOWNLOAD_DIR/$distributionUrlName"
+  cat >"$javaSource" <<-END
+	public class Downloader extends java.net.Authenticator
+	{
+	  protected java.net.PasswordAuthentication getPasswordAuthentication()
+	  {
+	    return new java.net.PasswordAuthentication( System.getenv( "MVNW_USERNAME" ), System.getenv( "MVNW_PASSWORD" ).toCharArray() );
+	  }
+	  public static void main( String[] args ) throws Exception
+	  {
+	    setDefault( new Downloader() );
+	    java.nio.file.Files.copy( java.net.URI.create( args[0] ).toURL().openStream(), java.nio.file.Paths.get( args[1] ).toAbsolutePath().normalize() );
+	  }
+	}
+	END
+  # For Cygwin/MinGW, switch paths to Windows format before running javac and java
+  verbose " - Compiling Downloader.java ..."
+  "$(native_path "$JAVACCMD")" "$(native_path "$javaSource")" || die "Failed to compile Downloader.java"
+  verbose " - Running Downloader.java ..."
+  "$(native_path "$JAVACMD")" -cp "$(native_path "$TMP_DOWNLOAD_DIR")" Downloader "$distributionUrl" "$(native_path "$targetZip")"
+fi
+
+# If specified, validate the SHA-256 sum of the Maven distribution zip file
+if [ -n "${distributionSha256Sum-}" ]; then
+  distributionSha256Result=false
+  if [ "$MVN_CMD" = mvnd.sh ]; then
+    echo "Checksum validation is not supported for maven-mvnd." >&2
+    echo "Please disable validation by removing 'distributionSha256Sum' from your maven-wrapper.properties." >&2
+    exit 1
+  elif command -v sha256sum >/dev/null; then
+    if echo "$distributionSha256Sum  $TMP_DOWNLOAD_DIR/$distributionUrlName" | sha256sum -c - >/dev/null 2>&1; then
+      distributionSha256Result=true
+    fi
+  elif command -v shasum >/dev/null; then
+    if echo "$distributionSha256Sum  $TMP_DOWNLOAD_DIR/$distributionUrlName" | shasum -a 256 -c >/dev/null 2>&1; then
+      distributionSha256Result=true
+    fi
+  else
+    echo "Checksum validation was requested but neither 'sha256sum' or 'shasum' are available." >&2
+    echo "Please install either command, or disable validation by removing 'distributionSha256Sum' from your maven-wrapper.properties." >&2
+    exit 1
+  fi
+  if [ $distributionSha256Result = false ]; then
+    echo "Error: Failed to validate Maven distribution SHA-256, your Maven distribution might be compromised." >&2
+    echo "If you updated your Maven version, you need to update the specified distributionSha256Sum property." >&2
+    exit 1
+  fi
+fi
+
+# unzip and move
+if command -v unzip >/dev/null; then
+  unzip ${__MVNW_QUIET_UNZIP:+"$__MVNW_QUIET_UNZIP"} "$TMP_DOWNLOAD_DIR/$distributionUrlName" -d "$TMP_DOWNLOAD_DIR" || die "failed to unzip"
+else
+  tar xzf${__MVNW_QUIET_TAR:+"$__MVNW_QUIET_TAR"} "$TMP_DOWNLOAD_DIR/$distributionUrlName" -C "$TMP_DOWNLOAD_DIR" || die "failed to untar"
+fi
+
+# Find the actual extracted directory name (handles snapshots where filename != directory name)
+actualDistributionDir=""
+
+# First try the expected directory name (for regular distributions)
+if [ -d "$TMP_DOWNLOAD_DIR/$distributionUrlNameMain" ]; then
+  if [ -f "$TMP_DOWNLOAD_DIR/$distributionUrlNameMain/bin/$MVN_CMD" ]; then
+    actualDistributionDir="$distributionUrlNameMain"
+  fi
+fi
+
+# If not found, search for any directory with the Maven executable (for snapshots)
+if [ -z "$actualDistributionDir" ]; then
+  # enable globbing to iterate over items
+  set +f
+  for dir in "$TMP_DOWNLOAD_DIR"/*; do
+    if [ -d "$dir" ]; then
+      if [ -f "$dir/bin/$MVN_CMD" ]; then
+        actualDistributionDir="$(basename "$dir")"
+        break
+      fi
+    fi
+  done
+  set -f
+fi
+
+if [ -z "$actualDistributionDir" ]; then
+  verbose "Contents of $TMP_DOWNLOAD_DIR:"
+  verbose "$(ls -la "$TMP_DOWNLOAD_DIR")"
+  die "Could not find Maven distribution directory in extracted archive"
+fi
+
+verbose "Found extracted Maven distribution directory: $actualDistributionDir"
+printf %s\\n "$distributionUrl" >"$TMP_DOWNLOAD_DIR/$actualDistributionDir/mvnw.url"
+mv -- "$TMP_DOWNLOAD_DIR/$actualDistributionDir" "$MAVEN_HOME" || [ -d "$MAVEN_HOME" ] || die "fail to move MAVEN_HOME"
+
+clean || :
+exec_maven "$@"
+</file>
+
+<file path="server/mvnw.cmd">
+<# : batch portion
+@REM ----------------------------------------------------------------------------
+@REM Licensed to the Apache Software Foundation (ASF) under one
+@REM or more contributor license agreements.  See the NOTICE file
+@REM distributed with this work for additional information
+@REM regarding copyright ownership.  The ASF licenses this file
+@REM to you under the Apache License, Version 2.0 (the
+@REM "License"); you may not use this file except in compliance
+@REM with the License.  You may obtain a copy of the License at
+@REM
+@REM    http://www.apache.org/licenses/LICENSE-2.0
+@REM
+@REM Unless required by applicable law or agreed to in writing,
+@REM software distributed under the License is distributed on an
+@REM "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+@REM KIND, either express or implied.  See the License for the
+@REM specific language governing permissions and limitations
+@REM under the License.
+@REM ----------------------------------------------------------------------------
+
+@REM ----------------------------------------------------------------------------
+@REM Apache Maven Wrapper startup batch script, version 3.3.4
+@REM
+@REM Optional ENV vars
+@REM   MVNW_REPOURL - repo url base for downloading maven distribution
+@REM   MVNW_USERNAME/MVNW_PASSWORD - user and password for downloading maven
+@REM   MVNW_VERBOSE - true: enable verbose log; others: silence the output
+@REM ----------------------------------------------------------------------------
+
+@IF "%__MVNW_ARG0_NAME__%"=="" (SET __MVNW_ARG0_NAME__=%~nx0)
+@SET __MVNW_CMD__=
+@SET __MVNW_ERROR__=
+@SET __MVNW_PSMODULEP_SAVE=%PSModulePath%
+@SET PSModulePath=
+@FOR /F "usebackq tokens=1* delims==" %%A IN (`powershell -noprofile "& {$scriptDir='%~dp0'; $script='%__MVNW_ARG0_NAME__%'; icm -ScriptBlock ([Scriptblock]::Create((Get-Content -Raw '%~f0'))) -NoNewScope}"`) DO @(
+  IF "%%A"=="MVN_CMD" (set __MVNW_CMD__=%%B) ELSE IF "%%B"=="" (echo %%A) ELSE (echo %%A=%%B)
+)
+@SET PSModulePath=%__MVNW_PSMODULEP_SAVE%
+@SET __MVNW_PSMODULEP_SAVE=
+@SET __MVNW_ARG0_NAME__=
+@SET MVNW_USERNAME=
+@SET MVNW_PASSWORD=
+@IF NOT "%__MVNW_CMD__%"=="" ("%__MVNW_CMD__%" %*)
+@echo Cannot start maven from wrapper >&2 && exit /b 1
+@GOTO :EOF
+: end batch / begin powershell #>
+
+$ErrorActionPreference = "Stop"
+if ($env:MVNW_VERBOSE -eq "true") {
+  $VerbosePreference = "Continue"
+}
+
+# calculate distributionUrl, requires .mvn/wrapper/maven-wrapper.properties
+$distributionUrl = (Get-Content -Raw "$scriptDir/.mvn/wrapper/maven-wrapper.properties" | ConvertFrom-StringData).distributionUrl
+if (!$distributionUrl) {
+  Write-Error "cannot read distributionUrl property in $scriptDir/.mvn/wrapper/maven-wrapper.properties"
+}
+
+switch -wildcard -casesensitive ( $($distributionUrl -replace '^.*/','') ) {
+  "maven-mvnd-*" {
+    $USE_MVND = $true
+    $distributionUrl = $distributionUrl -replace '-bin\.[^.]*$',"-windows-amd64.zip"
+    $MVN_CMD = "mvnd.cmd"
+    break
+  }
+  default {
+    $USE_MVND = $false
+    $MVN_CMD = $script -replace '^mvnw','mvn'
+    break
+  }
+}
+
+# apply MVNW_REPOURL and calculate MAVEN_HOME
+# maven home pattern: ~/.m2/wrapper/dists/{apache-maven-<version>,maven-mvnd-<version>-<platform>}/<hash>
+if ($env:MVNW_REPOURL) {
+  $MVNW_REPO_PATTERN = if ($USE_MVND -eq $False) { "/org/apache/maven/" } else { "/maven/mvnd/" }
+  $distributionUrl = "$env:MVNW_REPOURL$MVNW_REPO_PATTERN$($distributionUrl -replace "^.*$MVNW_REPO_PATTERN",'')"
+}
+$distributionUrlName = $distributionUrl -replace '^.*/',''
+$distributionUrlNameMain = $distributionUrlName -replace '\.[^.]*$','' -replace '-bin$',''
+
+$MAVEN_M2_PATH = "$HOME/.m2"
+if ($env:MAVEN_USER_HOME) {
+  $MAVEN_M2_PATH = "$env:MAVEN_USER_HOME"
+}
+
+if (-not (Test-Path -Path $MAVEN_M2_PATH)) {
+    New-Item -Path $MAVEN_M2_PATH -ItemType Directory | Out-Null
+}
+
+$MAVEN_WRAPPER_DISTS = $null
+if ((Get-Item $MAVEN_M2_PATH).Target[0] -eq $null) {
+  $MAVEN_WRAPPER_DISTS = "$MAVEN_M2_PATH/wrapper/dists"
+} else {
+  $MAVEN_WRAPPER_DISTS = (Get-Item $MAVEN_M2_PATH).Target[0] + "/wrapper/dists"
+}
+
+$MAVEN_HOME_PARENT = "$MAVEN_WRAPPER_DISTS/$distributionUrlNameMain"
+$MAVEN_HOME_NAME = ([System.Security.Cryptography.SHA256]::Create().ComputeHash([byte[]][char[]]$distributionUrl) | ForEach-Object {$_.ToString("x2")}) -join ''
+$MAVEN_HOME = "$MAVEN_HOME_PARENT/$MAVEN_HOME_NAME"
+
+if (Test-Path -Path "$MAVEN_HOME" -PathType Container) {
+  Write-Verbose "found existing MAVEN_HOME at $MAVEN_HOME"
+  Write-Output "MVN_CMD=$MAVEN_HOME/bin/$MVN_CMD"
+  exit $?
+}
+
+if (! $distributionUrlNameMain -or ($distributionUrlName -eq $distributionUrlNameMain)) {
+  Write-Error "distributionUrl is not valid, must end with *-bin.zip, but found $distributionUrl"
+}
+
+# prepare tmp dir
+$TMP_DOWNLOAD_DIR_HOLDER = New-TemporaryFile
+$TMP_DOWNLOAD_DIR = New-Item -Itemtype Directory -Path "$TMP_DOWNLOAD_DIR_HOLDER.dir"
+$TMP_DOWNLOAD_DIR_HOLDER.Delete() | Out-Null
+trap {
+  if ($TMP_DOWNLOAD_DIR.Exists) {
+    try { Remove-Item $TMP_DOWNLOAD_DIR -Recurse -Force | Out-Null }
+    catch { Write-Warning "Cannot remove $TMP_DOWNLOAD_DIR" }
+  }
+}
+
+New-Item -Itemtype Directory -Path "$MAVEN_HOME_PARENT" -Force | Out-Null
+
+# Download and Install Apache Maven
+Write-Verbose "Couldn't find MAVEN_HOME, downloading and installing it ..."
+Write-Verbose "Downloading from: $distributionUrl"
+Write-Verbose "Downloading to: $TMP_DOWNLOAD_DIR/$distributionUrlName"
+
+$webclient = New-Object System.Net.WebClient
+if ($env:MVNW_USERNAME -and $env:MVNW_PASSWORD) {
+  $webclient.Credentials = New-Object System.Net.NetworkCredential($env:MVNW_USERNAME, $env:MVNW_PASSWORD)
+}
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+$webclient.DownloadFile($distributionUrl, "$TMP_DOWNLOAD_DIR/$distributionUrlName") | Out-Null
+
+# If specified, validate the SHA-256 sum of the Maven distribution zip file
+$distributionSha256Sum = (Get-Content -Raw "$scriptDir/.mvn/wrapper/maven-wrapper.properties" | ConvertFrom-StringData).distributionSha256Sum
+if ($distributionSha256Sum) {
+  if ($USE_MVND) {
+    Write-Error "Checksum validation is not supported for maven-mvnd. `nPlease disable validation by removing 'distributionSha256Sum' from your maven-wrapper.properties."
+  }
+  Import-Module $PSHOME\Modules\Microsoft.PowerShell.Utility -Function Get-FileHash
+  if ((Get-FileHash "$TMP_DOWNLOAD_DIR/$distributionUrlName" -Algorithm SHA256).Hash.ToLower() -ne $distributionSha256Sum) {
+    Write-Error "Error: Failed to validate Maven distribution SHA-256, your Maven distribution might be compromised. If you updated your Maven version, you need to update the specified distributionSha256Sum property."
+  }
+}
+
+# unzip and move
+Expand-Archive "$TMP_DOWNLOAD_DIR/$distributionUrlName" -DestinationPath "$TMP_DOWNLOAD_DIR" | Out-Null
+
+# Find the actual extracted directory name (handles snapshots where filename != directory name)
+$actualDistributionDir = ""
+
+# First try the expected directory name (for regular distributions)
+$expectedPath = Join-Path "$TMP_DOWNLOAD_DIR" "$distributionUrlNameMain"
+$expectedMvnPath = Join-Path "$expectedPath" "bin/$MVN_CMD"
+if ((Test-Path -Path $expectedPath -PathType Container) -and (Test-Path -Path $expectedMvnPath -PathType Leaf)) {
+  $actualDistributionDir = $distributionUrlNameMain
+}
+
+# If not found, search for any directory with the Maven executable (for snapshots)
+if (!$actualDistributionDir) {
+  Get-ChildItem -Path "$TMP_DOWNLOAD_DIR" -Directory | ForEach-Object {
+    $testPath = Join-Path $_.FullName "bin/$MVN_CMD"
+    if (Test-Path -Path $testPath -PathType Leaf) {
+      $actualDistributionDir = $_.Name
+    }
+  }
+}
+
+if (!$actualDistributionDir) {
+  Write-Error "Could not find Maven distribution directory in extracted archive"
+}
+
+Write-Verbose "Found extracted Maven distribution directory: $actualDistributionDir"
+Rename-Item -Path "$TMP_DOWNLOAD_DIR/$actualDistributionDir" -NewName $MAVEN_HOME_NAME | Out-Null
+try {
+  Move-Item -Path "$TMP_DOWNLOAD_DIR/$MAVEN_HOME_NAME" -Destination $MAVEN_HOME_PARENT | Out-Null
+} catch {
+  if (! (Test-Path -Path "$MAVEN_HOME" -PathType Container)) {
+    Write-Error "fail to move MAVEN_HOME"
+  }
+} finally {
+  try { Remove-Item $TMP_DOWNLOAD_DIR -Recurse -Force | Out-Null }
+  catch { Write-Warning "Cannot remove $TMP_DOWNLOAD_DIR" }
+}
+
+Write-Output "MVN_CMD=$MAVEN_HOME/bin/$MVN_CMD"
+</file>
+
+<file path="webapp/public/favicon.svg">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 128 128">
+    <path d="M50.4 78.5a75.1 75.1 0 0 0-28.5 6.9l24.2-65.7c.7-2 1.9-3.2 3.4-3.2h29c1.5 0 2.7 1.2 3.4 3.2l24.2 65.7s-11.6-7-28.5-7L67 45.5c-.4-1.7-1.6-2.8-2.9-2.8-1.3 0-2.5 1.1-2.9 2.7L50.4 78.5Zm-1.1 28.2Zm-4.2-20.2c-2 6.6-.6 15.8 4.2 20.2a17.5 17.5 0 0 1 .2-.7 5.5 5.5 0 0 1 5.7-4.5c2.8.1 4.3 1.5 4.7 4.7.2 1.1.2 2.3.2 3.5v.4c0 2.7.7 5.2 2.2 7.4a13 13 0 0 0 5.7 4.9v-.3l-.2-.3c-1.8-5.6-.5-9.5 4.4-12.8l1.5-1a73 73 0 0 0 3.2-2.2 16 16 0 0 0 6.8-11.4c.3-2 .1-4-.6-6l-.8.6-1.6 1a37 37 0 0 1-22.4 2.7c-5-.7-9.7-2-13.2-6.2Z" />
+    <style>
+        path { fill: #000; }
+        @media (prefers-color-scheme: dark) {
+            path { fill: #FFF; }
+        }
+    </style>
+</svg>
+</file>
+
+<file path="webapp/src/assets/astro.svg">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" width="115" height="48"><path fill="#17191E" d="M7.77 36.35C6.4 35.11 6 32.51 6.57 30.62c.99 1.2 2.35 1.57 3.75 1.78 2.18.33 4.31.2 6.33-.78.23-.12.44-.27.7-.42.18.55.23 1.1.17 1.67a4.56 4.56 0 0 1-1.94 3.23c-.43.32-.9.61-1.34.91-1.38.94-1.76 2.03-1.24 3.62l.05.17a3.63 3.63 0 0 1-1.6-1.38 3.87 3.87 0 0 1-.63-2.1c0-.37 0-.74-.05-1.1-.13-.9-.55-1.3-1.33-1.32a1.56 1.56 0 0 0-1.63 1.26c0 .06-.03.12-.05.2Z"/><path fill="url(#a)" d="M7.77 36.35C6.4 35.11 6 32.51 6.57 30.62c.99 1.2 2.35 1.57 3.75 1.78 2.18.33 4.31.2 6.33-.78.23-.12.44-.27.7-.42.18.55.23 1.1.17 1.67a4.56 4.56 0 0 1-1.94 3.23c-.43.32-.9.61-1.34.91-1.38.94-1.76 2.03-1.24 3.62l.05.17a3.63 3.63 0 0 1-1.6-1.38 3.87 3.87 0 0 1-.63-2.1c0-.37 0-.74-.05-1.1-.13-.9-.55-1.3-1.33-1.32a1.56 1.56 0 0 0-1.63 1.26c0 .06-.03.12-.05.2Z"/><path fill="#17191E" d="M.02 30.31s4.02-1.95 8.05-1.95l3.04-9.4c.11-.45.44-.76.82-.76.37 0 .7.31.82.76l3.04 9.4c4.77 0 8.05 1.95 8.05 1.95L17 11.71c-.2-.56-.53-.91-.98-.91H7.83c-.44 0-.76.35-.97.9L.02 30.31Zm42.37-5.97c0 1.64-2.05 2.62-4.88 2.62-1.85 0-2.5-.45-2.5-1.41 0-1 .8-1.49 2.65-1.49 1.67 0 3.09.03 4.73.23v.05Zm.03-2.04a21.37 21.37 0 0 0-4.37-.36c-5.32 0-7.82 1.25-7.82 4.18 0 3.04 1.71 4.2 5.68 4.2 3.35 0 5.63-.84 6.46-2.92h.14c-.03.5-.05 1-.05 1.4 0 1.07.18 1.16 1.06 1.16h4.15a16.9 16.9 0 0 1-.36-4c0-1.67.06-2.93.06-4.62 0-3.45-2.07-5.64-8.56-5.64-2.8 0-5.9.48-8.26 1.19.22.93.54 2.83.7 4.06 2.04-.96 4.95-1.37 7.2-1.37 3.11 0 3.97.71 3.97 2.15v.57Zm11.37 3c-.56.07-1.33.07-2.12.07-.83 0-1.6-.03-2.12-.1l-.02.58c0 2.85 1.87 4.52 8.45 4.52 6.2 0 8.2-1.64 8.2-4.55 0-2.74-1.33-4.09-7.2-4.39-4.58-.2-4.99-.7-4.99-1.28 0-.66.59-1 3.65-1 3.18 0 4.03.43 4.03 1.35v.2a46.13 46.13 0 0 1 4.24.03l.02-.55c0-3.36-2.8-4.46-8.2-4.46-6.08 0-8.13 1.49-8.13 4.39 0 2.6 1.64 4.23 7.48 4.48 4.3.14 4.77.62 4.77 1.28 0 .7-.7 1.03-3.71 1.03-3.47 0-4.35-.48-4.35-1.47v-.13Zm19.82-12.05a17.5 17.5 0 0 1-6.24 3.48c.03.84.03 2.4.03 3.24l1.5.02c-.02 1.63-.04 3.6-.04 4.9 0 3.04 1.6 5.32 6.58 5.32 2.1 0 3.5-.23 5.23-.6a43.77 43.77 0 0 1-.46-4.13c-1.03.34-2.34.53-3.78.53-2 0-2.82-.55-2.82-2.13 0-1.37 0-2.65.03-3.84 2.57.02 5.13.07 6.64.11-.02-1.18.03-2.9.1-4.04-2.2.04-4.65.07-6.68.07l.07-2.93h-.16Zm13.46 6.04a767.33 767.33 0 0 1 .07-3.18H82.6c.07 1.96.07 3.98.07 6.92 0 2.95-.03 4.99-.07 6.93h5.18c-.09-1.37-.11-3.68-.11-5.65 0-3.1 1.26-4 4.12-4 1.33 0 2.28.16 3.1.46.03-1.16.26-3.43.4-4.43-.86-.25-1.81-.41-2.96-.41-2.46-.03-4.26.98-5.1 3.38l-.17-.02Zm22.55 3.65c0 2.5-1.8 3.66-4.64 3.66-2.81 0-4.61-1.1-4.61-3.66s1.82-3.52 4.61-3.52c2.82 0 4.64 1.03 4.64 3.52Zm4.71-.11c0-4.96-3.87-7.18-9.35-7.18-5.5 0-9.23 2.22-9.23 7.18 0 4.94 3.49 7.59 9.21 7.59 5.77 0 9.37-2.65 9.37-7.6Z"/><defs><linearGradient id="a" x1="6.33" x2="19.43" y1="40.8" y2="34.6" gradientUnits="userSpaceOnUse"><stop stop-color="#D83333"/><stop offset="1" stop-color="#F041FF"/></linearGradient></defs></svg>
+</file>
+
+<file path="webapp/src/assets/background.svg">
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1024" fill="none"><path fill="url(#a)" fill-rule="evenodd" d="M-217.58 475.75c91.82-72.02 225.52-29.38 341.2-44.74C240 415.56 372.33 315.14 466.77 384.9c102.9 76.02 44.74 246.76 90.31 366.31 29.83 78.24 90.48 136.14 129.48 210.23 57.92 109.99 169.67 208.23 155.9 331.77-13.52 121.26-103.42 264.33-224.23 281.37-141.96 20.03-232.72-220.96-374.06-196.99-151.7 25.73-172.68 330.24-325.85 315.72-128.6-12.2-110.9-230.73-128.15-358.76-12.16-90.14 65.87-176.25 44.1-264.57-26.42-107.2-167.12-163.46-176.72-273.45-10.15-116.29 33.01-248.75 124.87-320.79Z" clip-rule="evenodd" style="opacity:.154"/><path fill="url(#b)" fill-rule="evenodd" d="M1103.43 115.43c146.42-19.45 275.33-155.84 413.5-103.59 188.09 71.13 409 212.64 407.06 413.88-1.94 201.25-259.28 278.6-414.96 405.96-130 106.35-240.24 294.39-405.6 265.3-163.7-28.8-161.93-274.12-284.34-386.66-134.95-124.06-436-101.46-445.82-284.6-9.68-180.38 247.41-246.3 413.54-316.9 101.01-42.93 207.83 21.06 316.62 6.61Z" clip-rule="evenodd" style="opacity:.154"/><defs><linearGradient id="b" x1="373" x2="1995.44" y1="1100" y2="118.03" gradientUnits="userSpaceOnUse"><stop stop-color="#D83333"/><stop offset="1" stop-color="#F041FF"/></linearGradient><linearGradient id="a" x1="107.37" x2="1130.66" y1="1993.35" y2="1026.31" gradientUnits="userSpaceOnUse"><stop stop-color="#3245FF"/><stop offset="1" stop-color="#BC52EE"/></linearGradient></defs></svg>
+</file>
+
+<file path="webapp/src/components/Welcome.astro">
+---
+import astroLogo from '../assets/astro.svg';
+import background from '../assets/background.svg';
+---
+
+<div id="container">
+	<img id="background" src={background.src} alt="" fetchpriority="high" />
+	<main>
+		<section id="hero">
+			<a href="https://astro.build">
+				<img src={astroLogo.src} width="115" height="48" alt="Astro Homepage" />
+			</a>
+			<h1>
+				To get started, open the{' '}
+				<code>
+					<pre>src/pages</pre>
+				</code>{' '}
+				directory in your project.
+			</h1>
+			<section id="links">
+				<a class="button" href="https://docs.astro.build">
+					Read our docs
+				</a>
+				<a href="https://astro.build/chat">
+					Join our Discord{' '}
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36">
+						<path
+							fill="currentColor"
+							d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.11 0A72.37 72.37 0 0 0 45.64 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2a75.57 75.57 0 0 0 64.32 0c.87.71 1.76 1.39 2.66 2a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15ZM42.45 65.69C36.18 65.69 31 60 31 53s5-12.74 11.43-12.74S54 46 53.89 53s-5.05 12.69-11.44 12.69Zm42.24 0C78.41 65.69 73.25 60 73.25 53s5-12.74 11.44-12.74S96.23 46 96.12 53s-5.04 12.69-11.43 12.69Z"
+						></path>
+					</svg>
+				</a>
+			</section>
+		</section>
+	</main>
+
+	<a href="https://astro.build/blog/astro-7/" id="news" class="box">
+		<svg width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path
+				d="M24.667 12c1.333 1.414 2 3.192 2 5.334 0 4.62-4.934 5.7-7.334 12C18.444 28.567 18 27.456 18 26c0-4.642 6.667-7.053 6.667-14Zm-5.334-5.333c1.6 1.65 2.4 3.43 2.4 5.333 0 6.602-8.06 7.59-6.4 17.334C13.111 27.787 12 25.564 12 22.666c0-4.434 7.333-8 7.333-16Zm-6-5.333C15.111 3.555 16 5.556 16 7.333c0 8.333-11.333 10.962-5.333 22-3.488-.774-6-4-6-8 0-8.667 8.666-10 8.666-20Z"
+				fill="#111827"
+			></path>
+		</svg>
+		<h2>What's New in Astro 7.0?</h2>
+		<p>
+			Rust-powered compiler, advanced routing, AI agent support, and more! Click to explore Astro
+			7.0's new features.
+		</p>
+	</a>
+</div>
+
+<style>
+	#background {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: -1;
+		filter: blur(100px);
+	}
+
+	#container {
+		font-family: Inter, Roboto, 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif;
+		height: 100%;
+	}
+
+	main {
+		height: 100%;
+		display: flex;
+		justify-content: center;
+	}
+
+	#hero {
+		display: flex;
+		align-items: start;
+		flex-direction: column;
+		justify-content: center;
+		padding: 16px;
+	}
+
+	h1 {
+		font-size: 22px;
+		margin-top: 0.25em;
+	}
+
+	#links {
+		display: flex;
+		gap: 16px;
+	}
+
+	#links a {
+		display: flex;
+		align-items: center;
+		padding: 10px 12px;
+		color: #111827;
+		text-decoration: none;
+		transition: color 0.2s;
+	}
+
+	#links a:hover {
+		color: rgb(78, 80, 86);
+	}
+
+	#links a svg {
+		height: 1em;
+		margin-left: 8px;
+	}
+
+	#links a.button {
+		color: white;
+		background: linear-gradient(83.21deg, #3245ff 0%, #bc52ee 100%);
+		box-shadow:
+			inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+			inset 0 -2px 0 rgba(0, 0, 0, 0.24);
+		border-radius: 10px;
+	}
+
+	#links a.button:hover {
+		color: rgb(230, 230, 230);
+		box-shadow: none;
+	}
+
+	pre {
+		font-family:
+			ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono',
+			monospace;
+		font-weight: normal;
+		background: linear-gradient(14deg, #d83333 0%, #f041ff 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+		margin: 0;
+	}
+
+	h2 {
+		margin: 0 0 1em;
+		font-weight: normal;
+		color: #111827;
+		font-size: 20px;
+	}
+
+	p {
+		color: #4b5563;
+		font-size: 16px;
+		line-height: 24px;
+		letter-spacing: -0.006em;
+		margin: 0;
+	}
+
+	code {
+		display: inline-block;
+		background:
+			linear-gradient(66.77deg, #f3cddd 0%, #f5cee7 100%) padding-box,
+			linear-gradient(155deg, #d83333 0%, #f041ff 18%, #f5cee7 45%) border-box;
+		border-radius: 8px;
+		border: 1px solid transparent;
+		padding: 6px 8px;
+	}
+
+	.box {
+		padding: 16px;
+		background: rgba(255, 255, 255, 1);
+		border-radius: 16px;
+		border: 1px solid white;
+	}
+
+	#news {
+		position: absolute;
+		bottom: 16px;
+		right: 16px;
+		max-width: 300px;
+		text-decoration: none;
+		transition: background 0.2s;
+		backdrop-filter: blur(50px);
+	}
+
+	#news:hover {
+		background: rgba(255, 255, 255, 0.55);
+	}
+
+	@media screen and (max-height: 368px) {
+		#news {
+			display: none;
+		}
+	}
+
+	@media screen and (max-width: 768px) {
+		#container {
+			display: flex;
+			flex-direction: column;
+		}
+
+		#hero {
+			display: block;
+			padding-top: 10%;
+		}
+
+		#links {
+			flex-wrap: wrap;
+		}
+
+		#links a.button {
+			padding: 14px 18px;
+		}
+
+		#news {
+			right: 16px;
+			left: 16px;
+			bottom: 2.5rem;
+			max-width: 100%;
+		}
+
+		h1 {
+			line-height: 1.5;
+		}
+	}
+</style>
+</file>
+
+<file path="webapp/src/layouts/Layout.astro">
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Astro Basics</title>
+	</head>
+	<body>
+		<slot />
+	</body>
+</html>
+
+<style>
+	html,
+	body {
+		margin: 0;
+		width: 100%;
+		height: 100%;
+	}
+</style>
+</file>
+
+<file path="webapp/src/pages/index.astro">
+---
+import Welcome from '../components/Welcome.astro';
+import Layout from '../layouts/Layout.astro';
+
+// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
+// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+---
+
+<Layout>
+	<Welcome />
+</Layout>
+</file>
+
+<file path="webapp/.gitignore">
+# build output
+dist/
+
+# generated types
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# environment variables
+.env
+.env.production
+
+# macOS-specific files
+.DS_Store
+
+# jetbrains setting folder
+.idea/
+</file>
+
+<file path="webapp/AGENTS.md">
+## Development
+
+When starting the dev server, use background mode:
+
+```
+astro dev --background
+```
+
+Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
+
+## Documentation
+
+Full documentation: https://docs.astro.build
+
+Consult these guides before working on related tasks:
+
+- [Adding pages, dynamic routes, or middleware](https://docs.astro.build/en/guides/routing/)
+- [Working with Astro components](https://docs.astro.build/en/basics/astro-components/)
+- [Using React, Vue, Svelte, or other framework components](https://docs.astro.build/en/guides/framework-components/)
+- [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
+- [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
+- [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
+</file>
+
+<file path="webapp/astro.config.mjs">
+// @ts-check
+import { defineConfig } from 'astro/config';
+
+// https://astro.build/config
+export default defineConfig({});
+</file>
+
+<file path="webapp/package.json">
+{
+  "name": "webapp",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^7.4.2"
+  }
+}
+</file>
+
+<file path="webapp/tsconfig.json">
+{
+  "extends": "astro/tsconfigs/strict",
+  "include": [".astro/types.d.ts", "**/*"],
+  "exclude": ["dist"]
+}
+</file>
+
+<file path="server/auth-service/src/main/java/com/demo/authservice/adapter/in/web/ErrorResponse.java">
+package com.demo.authservice.adapter.in.web;
+
+import java.time.Instant;
+
+/** Single error body for the service: HTTP code + readable message + timestamp. */
+public record ErrorResponse(int code, String message, Instant timestamp) {}
+</file>
+
+<file path="server/auth-service/src/main/java/com/demo/authservice/adapter/in/web/GlobalExceptionHandler.java">
+package com.demo.authservice.adapter.in.web;
+
+import com.demo.authservice.application.service.InvalidCredentialsException;
+import java.time.Instant;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+/** Translates use-case exceptions into consistent JSON responses. */
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+  @ExceptionHandler(InvalidCredentialsException.class)
+  public ResponseEntity<ErrorResponse> handleInvalidCredentials(
+      InvalidCredentialsException exception) {
+    ErrorResponse body =
+        new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), exception.getMessage(), Instant.now());
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
+  }
+}
+</file>
+
+<file path="server/auth-service/src/main/java/com/demo/authservice/adapter/in/web/SecurityConfig.java">
+package com.demo.authservice.adapter.in.web;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+
+/**
+ * Service security: stateless with a minimal whitelist (D20). The real JWT enforcement lives at the
+ * gateway (D6); here the remaining routes are only protected in case of direct exposure.
+ */
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+  @Bean
+  SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http.csrf(AbstractHttpConfigurer::disable)
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers(
+                        "/api/auth/token",
+                        "/v3/api-docs/**",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html",
+                        "/actuator/health")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated());
+    return http.build();
+  }
+}
+</file>
+
+<file path="server/auth-service/src/main/java/com/demo/authservice/adapter/in/web/TokenController.java">
+package com.demo.authservice.adapter.in.web;
+
+import com.demo.authservice.application.service.TokenService;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/** Token issuing (D6/D19): the service's single entry point to obtain a JWT. */
+@RestController
+@RequestMapping("/api/auth")
+public class TokenController {
+
+  private final TokenService tokenService;
+
+  public TokenController(TokenService tokenService) {
+    this.tokenService = tokenService;
+  }
+
+  @PostMapping("/token")
+  public TokenResponse token(@RequestBody TokenRequest request) {
+    return tokenService.issue(request.username(), request.password());
+  }
+
+  public record TokenRequest(String username, String password) {}
+}
+</file>
+
+<file path="server/auth-service/src/main/java/com/demo/authservice/adapter/in/web/TokenResponse.java">
+package com.demo.authservice.adapter.in.web;
+
+import lombok.Builder;
+import lombok.extern.jackson.Jacksonized;
+
+/** Response of POST /api/auth/token: the issued token and its TTL in seconds. */
+@Builder
+@Jacksonized
+public record TokenResponse(String token, long expiresIn) {}
+</file>
+
+<file path="server/auth-service/src/main/java/com/demo/authservice/adapter/out/JpaUserAccounts.java">
+package com.demo.authservice.adapter.out;
+
+import com.demo.authservice.application.service.UserAccounts;
+import java.util.Optional;
+import org.springframework.stereotype.Service;
+
+/** JPA (Spring Data) implementation of the {@link UserAccounts} port. */
+@Service
+public class JpaUserAccounts implements UserAccounts {
+
+  private final UserAccountRepository repository;
+
+  public JpaUserAccounts(UserAccountRepository repository) {
+    this.repository = repository;
+  }
+
+  @Override
+  public Optional<Credentials> findByUsername(String username) {
+    return repository.findByUsername(username).map(JpaUserAccounts::toCredentials);
+  }
+
+  private static Credentials toCredentials(UserAccount account) {
+    return new Credentials(account.getPasswordHash(), account.getRoles());
+  }
+}
+</file>
+
+<file path="server/auth-service/src/main/java/com/demo/authservice/adapter/out/UserAccount.java">
+package com.demo.authservice.adapter.out;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+
+/** User persisted in H2; seeded via schema.sql/data.sql (D16). */
+@Entity
+@Table(name = "users")
+@Getter
+@Setter
+public class UserAccount {
+
+  @Id
+  @Column(length = 64)
+  private String username;
+
+  @Column(name = "password_hash", nullable = false, length = 100)
+  private String passwordHash;
+
+  @Column(nullable = false, length = 255)
+  private String roles;
+}
+</file>
+
+<file path="server/auth-service/src/main/java/com/demo/authservice/application/service/InvalidCredentialsException.java">
+package com.demo.authservice.application.service;
+
+/** Unknown user or wrong password; the web advice translates it into HTTP 401. */
+public class InvalidCredentialsException extends RuntimeException {
+
+  private static final long serialVersionUID = 1L;
+
+  public InvalidCredentialsException() {
+    super("Invalid credentials");
+  }
+}
+</file>
+
+<file path="server/auth-service/src/main/java/com/demo/authservice/application/service/TokenService.java">
+package com.demo.authservice.application.service;
+
+import com.demo.authservice.adapter.in.web.TokenResponse;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.crypto.RSASSASigner;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
+import java.security.GeneralSecurityException;
+import java.security.KeyFactory;
+import java.security.PrivateKey;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.time.Instant;
+import java.util.Base64;
+import java.util.Date;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+/**
+ * Issues RS256 JWTs (D14): validates credentials against H2 (D16) and signs with the private key
+ * from the config server (D21); TTL = app.jwt.expiration-seconds (D19).
+ */
+@Service
+public final class TokenService {
+
+  static final String ISSUER = "auth-service";
+
+  private final UserAccounts userAccounts;
+  private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+  private final RSASSASigner signer;
+  private final long expirationSeconds;
+
+  public TokenService(
+      UserAccounts userAccounts,
+      @Value("${app.jwt.private-key}") String privateKeyPem,
+      @Value("${app.jwt.expiration-seconds}") long expirationSeconds) {
+    this.userAccounts = userAccounts;
+    this.signer = new RSASSASigner(parsePrivateKey(privateKeyPem));
+    this.expirationSeconds = expirationSeconds;
+  }
+
+  /** Validates credentials and issues the token; invalid or unknown input → 401 via the advice. */
+  public TokenResponse issue(String username, String rawPassword) {
+    if (username == null || username.isBlank() || rawPassword == null) {
+      throw new InvalidCredentialsException();
+    }
+    UserAccounts.Credentials credentials =
+        userAccounts
+            .findByUsername(username)
+            .filter(candidate -> encoder.matches(rawPassword, candidate.passwordHash()))
+            .orElseThrow(InvalidCredentialsException::new);
+
+    Instant now = Instant.now();
+    JWTClaimsSet claims =
+        new JWTClaimsSet.Builder()
+            .subject(username)
+            .issuer(ISSUER)
+            .issueTime(Date.from(now))
+            .expirationTime(Date.from(now.plusSeconds(expirationSeconds)))
+            .claim("roles", credentials.roles())
+            .build();
+    SignedJWT jwt = new SignedJWT(new JWSHeader.Builder(JWSAlgorithm.RS256).build(), claims);
+    try {
+      jwt.sign(signer);
+    } catch (JOSEException e) {
+      throw new IllegalStateException("Could not sign the JWT", e);
+    }
+    return new TokenResponse(jwt.serialize(), expirationSeconds);
+  }
+
+  private static PrivateKey parsePrivateKey(String privateKeyPem) {
+    try {
+      String base64 =
+          privateKeyPem
+              .replace("-----BEGIN PRIVATE KEY-----", "")
+              .replace("-----END PRIVATE KEY-----", "")
+              .replaceAll("\\s", "");
+      byte[] der = Base64.getDecoder().decode(base64);
+      return KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(der));
+    } catch (GeneralSecurityException | IllegalArgumentException e) {
+      throw new IllegalStateException("app.jwt.private-key is not a valid RSA PKCS#8 key", e);
+    }
+  }
+}
+</file>
+
+<file path="server/auth-service/src/main/java/com/demo/authservice/application/service/UserAccounts.java">
+package com.demo.authservice.application.service;
+
+import java.util.Optional;
+
+/** Output port (D2): the use case knows nothing about JPA, H2 nor the persistence entity. */
+public interface UserAccounts {
+
+  Optional<Credentials> findByUsername(String username);
+
+  /** Immutable credentials the adapter extracts from the store. */
+  record Credentials(String passwordHash, String roles) {}
+}
+</file>
+
+<file path="server/auth-service/src/main/resources/application.yml">
+# Local: only what is needed to live without the config server (D5, degrades via optional:).
+# The rest (Eureka URL, RS256 keys, JWT TTL) travels from the config server.
+spring:
+  application:
+    name: auth-service
+  config:
+    import: optional:configserver:http://localhost:8888
+  jpa:
+    hibernate:
+      # Never create-drop: it would wipe the data.sql seed (SQL init runs before JPA)
+      ddl-auto: none
+
+# Random port also in local mode (D3): if the config server is down, this still holds
+server:
+  port: 0
+</file>
+
+<file path="server/auth-service/src/main/resources/data.sql">
+-- Fixed user demo/demo (D16). Precomputed BCrypt hash (strength 10) of "demo".
+INSERT INTO users (username, password_hash, roles)
+VALUES ('demo', '$2a$10$Geix9psUsjPfnTMmzgdDM.xIyzrQoXgzBqVnWMraOnHzQaG5cKVau', 'ROLE_USER');
+</file>
+
+<file path="server/auth-service/src/test/java/com/demo/authservice/application/service/TokenServiceTests.java">
+package com.demo.authservice.application.service;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import com.demo.authservice.adapter.in.web.TokenResponse;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.crypto.RSASSAVerifier;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
+import java.util.Date;
+import java.util.Optional;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+/** Unit tests (Mockito, no Spring) of RS256 JWT issuing (D14/D19). */
+class TokenServiceTests {
+
+  private static final long TTL_SECONDS = 3600;
+
+  private static String privateKeyPem;
+  private static String publicKeyPem;
+
+  private UserAccounts userAccounts;
+  private TokenService tokenService;
+
+  @BeforeAll
+  static void generateEphemeralKeyPair() throws Exception {
+    KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
+    generator.initialize(2048);
+    KeyPair pair = generator.generateKeyPair();
+    privateKeyPem = pem("PRIVATE KEY", pair.getPrivate().getEncoded());
+    publicKeyPem = pem("PUBLIC KEY", pair.getPublic().getEncoded());
+  }
+
+  @BeforeEach
+  void setUp() {
+    userAccounts = mock(UserAccounts.class);
+    tokenService = new TokenService(userAccounts, privateKeyPem, TTL_SECONDS);
+  }
+
+  @Test
+  void issuesRs256SignedJwtWithSubIssRolesAndExp() throws Exception {
+    when(userAccounts.findByUsername("demo"))
+        .thenReturn(Optional.of(new UserAccounts.Credentials(passwordHash(), "ROLE_USER")));
+
+    TokenResponse response = tokenService.issue("demo", "demo");
+
+    SignedJWT jwt = SignedJWT.parse(response.token());
+    assertThat(jwt.getHeader().getAlgorithm()).isEqualTo(JWSAlgorithm.RS256);
+    assertThat(jwt.verify(new RSASSAVerifier(publicKey()))).isTrue();
+
+    JWTClaimsSet claims = jwt.getJWTClaimsSet();
+    assertThat(claims.getSubject()).isEqualTo("demo");
+    assertThat(claims.getIssuer()).isEqualTo("auth-service");
+    assertThat(claims.getClaim("roles")).isEqualTo("ROLE_USER");
+    assertThat(response.expiresIn()).isEqualTo(TTL_SECONDS);
+    Date issuedAt = claims.getIssueTime();
+    Date expiresAt = claims.getExpirationTime();
+    assertThat(expiresAt.toInstant().getEpochSecond() - issuedAt.toInstant().getEpochSecond())
+        .isEqualTo(TTL_SECONDS);
+  }
+
+  @Test
+  void rejectsWrongPassword() {
+    when(userAccounts.findByUsername("demo"))
+        .thenReturn(Optional.of(new UserAccounts.Credentials(passwordHash(), "ROLE_USER")));
+
+    assertThatThrownBy(() -> tokenService.issue("demo", "wrong-password"))
+        .isInstanceOf(InvalidCredentialsException.class);
+  }
+
+  @Test
+  void rejectsUnknownUser() {
+    when(userAccounts.findByUsername("ghost")).thenReturn(Optional.empty());
+
+    assertThatThrownBy(() -> tokenService.issue("ghost", "demo"))
+        .isInstanceOf(InvalidCredentialsException.class);
+  }
+
+  @Test
+  void rejectsBlankOrMissingInputsWithoutTouchingTheStore() {
+    assertThatThrownBy(() -> tokenService.issue(" ", "demo"))
+        .isInstanceOf(InvalidCredentialsException.class);
+    assertThatThrownBy(() -> tokenService.issue("demo", null))
+        .isInstanceOf(InvalidCredentialsException.class);
+
+    verify(userAccounts, never()).findByUsername(anyString());
+  }
+
+  @Test
+  void honorsConfiguredExpiration() throws Exception {
+    TokenService shortLived = new TokenService(userAccounts, privateKeyPem, 60);
+    when(userAccounts.findByUsername("demo"))
+        .thenReturn(Optional.of(new UserAccounts.Credentials(passwordHash(), "ROLE_USER")));
+
+    TokenResponse response = shortLived.issue("demo", "demo");
+    JWTClaimsSet claims = SignedJWT.parse(response.token()).getJWTClaimsSet();
+
+    assertThat(response.expiresIn()).isEqualTo(60);
+    assertThat(
+            claims.getExpirationTime().toInstant().getEpochSecond()
+                - claims.getIssueTime().toInstant().getEpochSecond())
+        .isEqualTo(60);
+  }
+
+  private static String passwordHash() {
+    return new BCryptPasswordEncoder().encode("demo");
+  }
+
+  private static String pem(String type, byte[] der) {
+    String base64 = Base64.getMimeEncoder(64, new byte[] {'\n'}).encodeToString(der);
+    return "-----BEGIN " + type + "-----\n" + base64 + "\n-----END " + type + "-----";
+  }
+
+  private static RSAPublicKey publicKey() throws Exception {
+    String base64 =
+        publicKeyPem
+            .replace("-----BEGIN PUBLIC KEY-----", "")
+            .replace("-----END PUBLIC KEY-----", "")
+            .replaceAll("\\s", "");
+    return (RSAPublicKey)
+        java.security.KeyFactory.getInstance("RSA")
+            .generatePublic(new X509EncodedKeySpec(Base64.getDecoder().decode(base64)));
+  }
+}
+</file>
+
+<file path="server/auth-service/src/test/java/com/demo/authservice/AuthServiceApplicationTests.java">
+package com.demo.authservice;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.demo.authservice.adapter.in.web.TokenResponse;
+import com.demo.authservice.application.service.TokenService;
+import com.nimbusds.jose.crypto.RSASSAVerifier;
+import com.nimbusds.jwt.SignedJWT;
+import java.security.KeyFactory;
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class AuthServiceApplicationTests {
+
+  @Autowired private TokenService tokenService;
+
+  @Value("${app.jwt.public-key}")
+  private String publicKeyPem;
+
+  @Test
+  void contextLoads() {}
+
+  /** Cold integration: H2 seed + BCrypt + test keys from the test classpath. */
+  @Test
+  void issuesTokenForSeededDemoUserVerifiableWithTestPublicKey() throws Exception {
+    TokenResponse response = tokenService.issue("demo", "demo");
+
+    SignedJWT jwt = SignedJWT.parse(response.token());
+    assertThat(jwt.verify(new RSASSAVerifier(publicKey()))).isTrue();
+    assertThat(jwt.getJWTClaimsSet().getSubject()).isEqualTo("demo");
+    assertThat(jwt.getJWTClaimsSet().getIssuer()).isEqualTo("auth-service");
+  }
+
+  private RSAPublicKey publicKey() throws Exception {
+    String base64 =
+        publicKeyPem
+            .replace("-----BEGIN PUBLIC KEY-----", "")
+            .replace("-----END PUBLIC KEY-----", "")
+            .replaceAll("\\s", "");
+    return (RSAPublicKey)
+        KeyFactory.getInstance("RSA")
+            .generatePublic(new X509EncodedKeySpec(Base64.getDecoder().decode(base64)));
+  }
+}
+</file>
+
+<file path="server/auth-service/src/test/java/com/demo/authservice/UserAccountSeedTests.java">
+package com.demo.authservice;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.demo.authservice.adapter.out.UserAccount;
+import com.demo.authservice.adapter.out.UserAccountRepository;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+/** Verifies the data.sql seed (D16): user demo/demo with a real BCrypt hash. */
+@SpringBootTest
+class UserAccountSeedTests {
+
+  @Autowired private UserAccountRepository repository;
+
+  @Test
+  void seedsDemoUserWithBcryptHashMatchingPlainPassword() {
+    UserAccount demo = repository.findByUsername("demo").orElseThrow();
+
+    assertThat(new BCryptPasswordEncoder().matches("demo", demo.getPasswordHash())).isTrue();
+    assertThat(demo.getRoles()).contains("ROLE_USER");
+  }
+
+  @Test
+  void doesNotSeedAnyOtherUser() {
+    assertThat(repository.count()).isEqualTo(1);
+  }
+}
+</file>
+
+<file path="server/auth-service/pom.xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.demo</groupId>
+        <artifactId>build-parent</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>auth-service</artifactId>
+    <name>auth-service</name>
+    <description>RS256 JWT issuing (D14/D19) with a user seeded in H2 (D16) - T6: token endpoint</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>
+</file>
+
+<file path="server/config/checkstyle.xml">
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+        "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+        "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<!--
+  Own project rules (T3). Deliberately short: formatting is handled by
+  google-java-format (Spotless); here only semantic rules that do not fail
+  on noise. severity=error at the root => any violation breaks `verify`.
+-->
+<module name="Checker">
+    <property name="charset" value="UTF-8"/>
+
+    <module name="FileTabCharacter"/>
+    <module name="NewlineAtEndOfFile"/>
+    <module name="LineLength">
+        <property name="max" value="120"/>
+        <property name="ignorePattern" value="^package.*|^import.*|href=|http"/>
+    </module>
+
+    <module name="TreeWalker">
+        <module name="UnusedImports"/>
+        <module name="RedundantImport"/>
+        <module name="AvoidStarImport"/>
+        <module name="NeedBraces"/>
+        <module name="EmptyStatement"/>
+        <module name="EqualsHashCode"/>
+        <module name="FallThrough"/>
+    </module>
+</module>
+</file>
+
+<file path="server/config-server/src/main/resources/config/application.yml">
+# Shared config for every service (native repository - D4/D5)
+eureka:
+  client:
+    service-url:
+      default-zone: http://localhost:8761/eureka
+  instance:
+    prefer-ip-address: true
+</file>
+
+<file path="server/config-server/src/main/resources/config/demo-service.yml">
+# demo-service (D3: random port; D18: servlet). No data and no logic of its own:
+# it only exposes GET /api/demo/hello and registers in Eureka under the name demo-service.
+server:
+  port: 0
+</file>
+
+<file path="server/config-server/pom.xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.demo</groupId>
+        <artifactId>build-parent</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>config-server</artifactId>
+    <name>config-server</name>
+    <description>Spring Cloud Config Server (native backend - config as code in this repo, D4)</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-config-server</artifactId>
+        </dependency>
+    </dependencies>
+</project>
+</file>
+
+<file path="server/demo-service/src/main/java/com/demo/demoservice/adapter/in/web/HelloController.java">
+package com.demo.demoservice.adapter.in.web;
+
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/** Only endpoint of the sample service (D6): behind the gateway it answers "Hello world!". */
+@RestController
+@RequestMapping("/api/demo")
+public class HelloController {
+
+  @GetMapping(value = "/hello", produces = MediaType.TEXT_PLAIN_VALUE)
+  public String hello() {
+    return "Hello world!";
+  }
+}
+</file>
+
+<file path="server/demo-service/src/main/resources/application.yml">
+# Local: only what is needed to live without the config server (D5, degrades via optional:).
+# The Eureka URL arrives from the config server (shared config/application.yml of the native repo).
+spring:
+  application:
+    name: demo-service
+  config:
+    import: optional:configserver:http://localhost:8888
+
+# Random port also in local mode (D3): if the config server is down, it still holds
+server:
+  port: 0
+</file>
+
+<file path="server/demo-service/src/test/java/com/demo/demoservice/DemoServiceApplicationTests.java">
+package com.demo.demoservice;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
+
+/** Cold context: no config server nor Eureka (shadow from src/test/resources). */
+@SpringBootTest
+class DemoServiceApplicationTests {
+
+  @Autowired private Environment env;
+
+  @Test
+  void contextLoadsWithRandomPortAndServiceName() {
+    assertThat(env.getProperty("spring.application.name")).isEqualTo("demo-service");
+    assertThat(env.getProperty("server.port")).isNotNull();
+  }
+}
+</file>
+
+<file path="server/demo-service/src/test/resources/application.yml">
+# Cold test config: replaces the main application.yml (test classpath comes first).
+# No config import nor Eureka => deterministic even with services running locally.
+spring:
+  application:
+    name: demo-service
+  cloud:
+    config:
+      enabled: false
+
+eureka:
+  client:
+    enabled: false
+
+server:
+  port: 0
+</file>
+
+<file path="server/demo-service/pom.xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.demo</groupId>
+        <artifactId>build-parent</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>demo-service</artifactId>
+    <name>demo-service</name>
+    <description>Sample service behind the gateway: GET /api/demo/hello -> "Hello world!" (D6/D18)</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>
+</file>
+
+<file path="server/discovery-server/src/main/resources/application.yml">
+server:
+  port: 8761
+
+spring:
+  application:
+    name: discovery-server
+
+# Solitary Eureka (D12): it neither registers nor fetches the registry.
+# No config server: it starts second and avoids startup cycles.
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+</file>
+
+<file path="server/discovery-server/pom.xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.demo</groupId>
+        <artifactId>build-parent</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>discovery-server</artifactId>
+    <name>discovery-server</name>
+    <description>Solitary Eureka Server (1 node, D12) - no config server to avoid startup cycles</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+        </dependency>
+    </dependencies>
+</project>
+</file>
+
+<file path="server/gateway-server/src/main/resources/application.yml">
+# Local: only what is needed to live without the config server (D5, degrades via optional:).
+# The lb:// routes arrive from the config server (config/gateway-server.yml of the native repo).
+spring:
+  application:
+    name: gateway-server
+  config:
+    import: optional:configserver:http://localhost:8888
+
+# Port 8080 also in local mode (D3): the client only ever sees this door
+server:
+  port: 8080
+</file>
+
+<file path="server/gateway-server/src/test/java/com/demo/gatewayserver/GatewayRouteDefinitionsTests.java">
+package com.demo.gatewayserver;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.Duration;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cloud.gateway.route.RouteDefinition;
+import org.springframework.cloud.gateway.route.RouteDefinitionLocator;
+import reactor.core.publisher.Flux;
+
+/**
+ * In production the 4 routes (token, demo and the 2 api-docs loops) arrive from the config server;
+ * here they are declared in the test shadow with the SAME namespace to validate that they parse.
+ */
+@SpringBootTest
+class GatewayRouteDefinitionsTests {
+
+  @Autowired private List<RouteDefinitionLocator> locators;
+
+  @Test
+  void fourRoutesAreRegisteredFromConfigNamespace() {
+    List<String> ids =
+        Flux.fromIterable(locators)
+            .flatMap(locator -> locator.getRouteDefinitions())
+            .map(RouteDefinition::getId)
+            .distinct()
+            .collectList()
+            .block(Duration.ofSeconds(10));
+    assertThat(ids)
+        .contains("auth-token", "demo-api", "api-docs-auth-service", "api-docs-demo-service");
+  }
+}
+</file>
+
+<file path="server/gateway-server/src/test/java/com/demo/gatewayserver/GatewayServerApplicationTests.java">
+package com.demo.gatewayserver;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
+
+/** Cold context: no config server nor Eureka (shadow from src/test/resources). */
+@SpringBootTest
+class GatewayServerApplicationTests {
+
+  @Autowired private Environment env;
+
+  @Test
+  void contextLoadsWithRandomPortAndServiceName() {
+    assertThat(env.getProperty("spring.application.name")).isEqualTo("gateway-server");
+    assertThat(env.getProperty("server.port")).isNotNull();
+  }
+}
+</file>
+
+<file path="server/lombok.config">
+# Lombok config - root of the server/ multi-module build (D8)
+config.stopBubbling = true
+
+# Do not inflate JaCoCo coverage with generated methods
+lombok.addLombokGeneratedAnnotation = true
+
+# @Jacksonized must pin Jackson 2 (Boot 3.5); without this Lombok warns about Jackson2/3 ambiguity
+lombok.jacksonized.jacksonVersion = 2
+</file>
+
+<file path="server/README.md">
+# server — Spring Boot microservices skeleton
+
+Sample backend with Spring Boot **3.5.16** (LTS) + Spring Cloud **2025.0.3**: centralized
+configuration, Eureka discovery, JWT **RS256** authentication and full build QA. The goal is to
+look like a real enterprise app while needing nothing external (no Docker, no config git repo,
+no SonarQube).
+
+> **Status:** tasks **T1–T8** complete (parent + config + Eureka + auth with JWT + demo-service +
+> gateway routes). Remaining: **T9–T11** (JWT validation at the gateway, aggregated Swagger UI,
+> final README pass). The full JWT flow *through the gateway* lands in T9–T10.
+
+## Architecture
+
+Multi-module Maven. A single `build-parent` (root) pins **every** version; child modules declare
+no `<version>`.
+
+| Module | Port | Responsibility |
+| --- | --- | --- |
+| `build-parent` | — | `server/pom.xml`: single source of versions + inherited QA |
+| `config-server` | **8888** | Spring Cloud Config (*native* backend: config as code in this repo) |
+| `discovery-server` | **8761** | Eureka (single node, solitary) |
+| `auth-service` | **random** | In-memory H2 + signed RS256 JWT; TTL configurable via config server |
+| `demo-service` | random | `GET /api/demo/hello` → `"Hello world!"` |
+| `gateway-server` | **8080** | Single entry point; routes via Eureka and serves aggregated Swagger (T9–T10) |
+
+Startup order: **config → eureka → auth/demo → gateway**. The client only talks to `8080`; auth
+and demo are discovered by name through Eureka, on random ports.
+
+## Requirements
+
+- JDK 25 (we compile with `--release 21`, so the bytecode targets Java 21).
+- Nothing else: the Maven Wrapper (`./mvnw`) downloads the exact Maven version (3.9.16) itself.
+
+## Start
+
+```powershell
+# from server/
+./mvnw -B spring-boot:run -pl config-server      # 8888
+./mvnw -B spring-boot:run -pl discovery-server   # 8761
+./mvnw -B spring-boot:run -pl auth-service       # random port → check the log or Eureka
+./mvnw -B spring-boot:run -pl demo-service       # random port → check the log or Eureka
+./mvnw -B spring-boot:run -pl gateway-server     # 8080
+```
+
+Eureka lives at `http://localhost:8761/` and shows `AUTH-SERVICE` and `DEMO-SERVICE` with their
+random ports.
+
+> `spring-boot:run` forks a child process. When restarting, kill the process by its **listening
+> port** (not just the Maven wrapper) or an orphan JVM will linger.
+
+## Build and QA
+
+```powershell
+./mvnw -B verify                 # compiles + tests + formatting + analysis (the main check)
+./mvnw -B verify -pl auth-service -am   # a concrete module + its dependencies
+./mvnw spotless:apply            # format by hand
+```
+
+`verify` runs four quality gates: **Spotless** (google-java-format 1.36.1), **Checkstyle**
+(rules in `config/checkstyle.xml`), **SpotBugs + FindSecBugs** (static analysis with security
+rules) and **JaCoCo** (coverage report in `target/site/jacoco/`).
+
+## Try the auth (today, direct port)
+
+`POST /api/auth/token` with the seeded user `demo`/`demo`:
+
+```powershell
+# Swagger UI in the browser: http://localhost:<auth-port>/swagger-ui.html
+# or CLI (replace <auth> with the port from the log):
+Invoke-RestMethod -Method Post -Uri http://localhost:<auth>/api/auth/token `
+  -Body '{"username":"demo","password":"demo"}' -ContentType 'application/json'
+```
+
+It returns an RS256 JWT. Wrong password → `401` and `{"code":401,"message":"Invalid credentials",...}`.
+Once the gateway exists (T8+), do all of this against `http://localhost:8080`.
+
+## Generate your own RS256 key (optional)
+
+The key shipped in the repo is DEV-ONLY. To use your own:
+
+1. **Generate the pair** (JDK 25, nothing to install):
+
+   ```powershell
+   openssl genrsa -out priv.pem 2048
+   openssl rsa -in priv.pem -pubout -out pub.pem
+   ```
+
+   or Java-only (single-file, no OpenSSL):
+
+   ```powershell
+   java C:\path\to\GenRsa.java   # writes PKCS#8 (private) + X.509 (public) PEMs
+   ```
+
+2. **Paste the private key** into `config-server/src/main/resources/config/auth-service.yml`,
+   under `app.jwt.private-key`, keeping the `-----BEGIN/END PRIVATE KEY-----` markers.
+
+3. **Add the public key** (still pending, T9): `config/gateway-server.yml` will use it in the
+   resource server to verify signatures.
+
+4. **Restart** `config-server` and `auth-service`. If the config cannot read the key, auth
+   degrades to local config and still starts (mode `optional:configserver`).
+
+> Cryptographic material marked **DEV-ONLY**: never use these keys in production. Real rotation /
+> JWKS was deliberately dropped (D21) because it clashes with the random ports.
+
+## Change the JWT TTL (no recompile)
+
+1. Edit `app.jwt.expiration-seconds` in `config-server/src/main/resources/config/auth-service.yml`
+   (default `3600`).
+2. Restart `config-server` and `auth-service`.
+3. Request a token: `exp − iat` reflects the new value. **Success criterion 4** of the SPEC,
+   already verified (3600 → 1800 → 3600).
+
+## Structure
+
+```text
+server/
+├── pom.xml                     # build-parent (single source of versions)
+├── mvnw, mvnw.cmd, .mvn/       # versioned wrapper
+├── lombok.config
+├── config/checkstyle.xml       # style rules
+├── config-server/
+│   └── src/main/resources/config/   # NATIVE config repository
+│       ├── application.yml         # shared (Eureka)
+│       ├── auth-service.yml        # RS256 pair + expiration-seconds + H2
+│       ├── demo-service.yml
+│       └── gateway-server.yml      # routes (public key lands in T9)
+├── discovery-server/
+├── auth-service/
+│   └── src/main/resources/         # application.yml, schema.sql, data.sql
+├── demo-service/
+└── gateway-server/
+```
+
+Hexagonal layered design (D2): `adapter.in.web` (HTTP) → `application.service` (use cases and
+ports) → `adapter.out` (JPA). The private key never leaves the native config.
+</file>
+
+<file path="webapp/README.md">
+# webapp — Astro app (template)
+
+**Astro 7** starter generated from the `basics` template and **deliberately left untouched**: the
+work in this repo lives in `server/` (see [`../SPEC.md`](../SPEC.md)) and the rule is never to
+touch this folder (success criterion 7).
+
+```sh
+npm create astro@latest -- --template basics
+```
+
+## Commands
+
+All from `webapp/`:
+
+| Command | Action |
+| :--- | :--- |
+| `npm install` | Installs dependencies |
+| `npm run dev` | Starts the dev server at `localhost:4321` |
+| `npm run build` | Production build to `./dist/` |
+| `npm run preview` | Previews the build |
+| `npm run astro ...` | Astro CLI (`astro add`, `astro check`, …) |
+
+## Structure
+
+```text
+webapp/
+├── public/            # static assets
+├── src/
+│   ├── assets/        # images
+│   ├── components/    # .astro components
+│   ├── layouts/       # layouts
+│   └── pages/         # routes (index.astro)
+├── astro.config.mjs
+└── package.json
+```
+
+Docs: <https://docs.astro.build>.
+</file>
+
+<file path=".gitignore">
+# === Node / Astro (webapp) ===
+node_modules/
+webapp/dist/
+webapp/.astro/
+.npm/
+
+# === Java / Maven (server) ===
+target/
+*.class
+*.jar
+!mvnw
+*.log
+
+# === IDE / editor ===
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+*.swp
+
+# === OS ===
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# === Environment ===
+.env
+.env.local
+*.tmp
+
+# === OpenCode agent harness (not part of the project) ===
+.agents/
+skills-lock.json
+</file>
+
+<file path="AGENTS.md">
+# Agent Instructions
+
+## Language policy
+
+- Conversation with the user: **Spanish**.
+- Everything written into the repo (code, comments, config annotations, docs, commit
+  messages): **English**.
+
+## Repo layout
+
+- Single app: `webapp/` — a stock Astro starter (basics template). No monorepo tooling.
+- All commands (npm, astro) run from `webapp/`, not the repo root.
+- The repo is a git repository (remote: `github.com/Julianegpo/astro-java-test`, branch `main`).
+- Node `>=22.23.4` required (`webapp/package.json` engines); npm with committed `package-lock.json` (not pnpm/yarn).
+- `astro.config.mjs` is empty (framework defaults, dev server on port 4321). `tsconfig.json` extends `astro/tsconfigs/strict`.
+- No test, lint, typecheck, or CI tooling is configured. Don't invent verification commands; `npm run build` is the only real check today.
+- `webapp/AGENTS.md` is auto-loaded for work in `webapp/` and covers the dev server — start it in background mode (`astro dev --background`, managed via `astro dev stop|status|logs`). Never run a foreground dev server.
+
+## Agent Skills (OpenCode)
+
+This project pins skills under `.agents/skills/` (see `skills-lock.json` for sources and hashes).
+
+- If a task matches a skill, invoke it with the `skill` tool before acting. Skills live at `.agents/skills/<skill-name>/SKILL.md`.
+- Follow the skill workflow strictly; never skip required steps (spec, plan, test) when a skill demands them.
+
+Intent → skill mapping:
+
+- Feature / new functionality → `spec-driven-development`, then `incremental-implementation` and `test-driven-development`
+- Planning / breakdown → `planning-and-task-breakdown`
+- Bug / failure / unexpected behavior → `debugging-and-error-recovery`
+- Code review → `code-review-and-quality`
+- Refactoring / simplification → `code-simplification`
+- API or interface design → `api-and-interface-design`
+- UI work → `frontend-ui-engineering`
+</file>
+
+<file path="GUIA.md">
+# GUIA — What was built and why (day 1 → today)
+
+This guide is meant to help you **explain in your own words** what this repo contains.
+It is ordered the same way it was built.
+
+---
+
+## 1. The global idea in 30 seconds
+
+I built a **Spring Boot microservices backend skeleton**, similar to what is used in a real
+company, but minimal and needing nothing external (no Docker, no installed database, no servers).
+
+The flow we want to reach:
+
+1. A client requests a **token** sending username and password.
+2. The authentication service (**auth**) validates it and returns a signed **JWT**.
+3. The client uses that token to call a protected service (**demo**).
+4. No valid token → **401**. With token → **200 "Hello world!"**.
+
+Right now (day 1) the **foundations** of that are in place: the configuration system, the
+discovery system and the authentication service that issues tokens. What is missing is the
+"brain" that ties everything together (the gateway) and the demo service.
+
+---
+
+## 2. The first three services that work
+
+A company Spring project is usually not a single application but several small ones that talk to
+each other. These are the ones already living in `server/`:
+
+| Service | Port | What it does | Why it exists |
+| --- | --- | --- | --- |
+| **config-server** | 8888 | Holds the configuration of every other service **in one place** (here, as files in this repo) | Avoids scattered config; change it without recompiling |
+| **discovery-server** | 8761 | This is **Eureka**: a "phone book" where services announce their address | Since auth uses a random port, something must be able to locate it |
+| **auth-service** | random | Validates username/password and **signs JWTs** | It issues the tokens |
+
+### The startup order matters
+
+```
+config-server  →  discovery-server  →  auth-service (later demo and gateway)
+```
+
+- **config-server** goes first because the others ask it for their configuration.
+- **discovery-server** goes second because services tell it "here I am".
+- **auth** starts afterwards and needs both previous ones.
+
+---
+
+## 3. The important decisions (and why)
+
+These are the ones that were taken and are worth being able to justify:
+
+- **Spring Boot 3.5 LTS + Spring Cloud 2025.0.3**: stable, long-term supported. It is the
+  officially compatible combination.
+- **Centralized config ("native")**: instead of an external config server, the config lives as
+  files in this repo (`server/config-server/src/main/resources/config/`). Simple, no dependencies.
+- **Random ports on auth and demo**: in production services come and go, so no fixed port is
+  assigned. The gateway finds them **by name** through Eureka.
+- **JWT with RS256 (key pair)**: the **private key** only belongs to auth (to sign); the **public
+  key** is used by whoever receives the token (to verify). Unlike HS256, whoever verifies cannot
+  sign. More secure.
+- **The token TTL is configurable**: how long a token takes to expire (`exp`) is not written in
+  the code, it comes from the configuration. Change a number, restart auth, and tokens now expire
+  sooner. No recompiling.
+- **QA in the build**: the build does not only compile, it also **formats, checks style, hunts
+  bugs and measures test coverage**. If something does not comply, the build fails.
+
+---
+
+## 4. How auth works inside (the most "enterprise" part)
+
+The authentication service is written following a design pattern called **hexagonal architecture**
+(separating business logic from technical details). You can see it in the packages:
+
+```
+com.demo.authservice/
+├── adapter/in/web/          → "where it comes in" (HTTP): controller, security, DTOs
+├── application/service/     → "the brain": the token-issuing logic and the ports (interfaces)
+└── adapter/out/             → "where it goes out" (data): the JPA/H2 part
+```
+
+The flow of issuing a token:
+
+1. `POST /api/auth/token` arrives with `{"username":"demo","password":"demo"}`.
+2. The **TokenService** (business logic) validates the password against the in-memory H2 database
+   (which boots with a seeded `demo` user hashed with BCrypt).
+3. If correct, it **signs a JWT** with the private key and the claims `sub` (user), `roles`, `iss`
+   (who issued it) and `exp` (expiry from configuration).
+4. It returns the token. Wrong password → **401** with a consistent error body.
+
+> Security note: the "database" is **in-memory H2** — it is wiped on restart. It is a sample, not
+> real persistence.
+
+---
+
+## 5. The two "tricks" worth explaining
+
+### a) The signed token (JWT RS256)
+
+A JWT is a text with three parts separated by dots: `header.payload.signature`.
+- The **header** says "this is RS256".
+- The **payload** holds the claims: who, from whom, until when.
+- The **signature** is computed by auth with its private key. Anyone with the public key can
+  verify nobody tampered with it.
+
+### b) Configuration that travels over the network
+
+Services do not have their configuration written in their own `application.yml`; they **ask the
+config-server** at boot. That is why changing the token expiry is just editing a file in the
+config server and restarting auth (exactly "success criterion 4" that was verified: 3600 → 1800
+seconds and back without touching code).
+
+---
+
+## 6. Where we are and what is missing
+
+**Done (day 1):**
+- `build-parent` (the Maven parent that pins every version in one place)
+- `config-server` (centralized config)
+- `discovery-server` (Eureka)
+- `auth-service` complete: H2 with the demo user, RS256 JWT issuing, configurable TTL, tests and
+  green QA
+- READMEs for root, `server/` and `webapp/`
+- Manual verification: token issued and verified (valid RS256 signature), TTL changed without
+  recompiling
+
+**Pending:**
+- **demo-service** — the `GET /api/demo/hello` that returns "Hello world!"
+- **gateway-server** — the single entry point (8080) that validates the JWT and routes
+- **Aggregated Swagger UI** — to test everything from the browser without Postman
+- **Final README + global success criteria**
+
+---
+
+## 7. How to start it and try it
+
+```powershell
+# from server/
+./mvnw -B spring-boot:run -pl config-server      # 8888
+./mvnw -B spring-boot:run -pl discovery-server   # 8761
+./mvnw -B spring-boot:run -pl auth-service       # random port (log or Eureka :8761)
+```
+
+Request a token:
+
+```powershell
+Invoke-RestMethod -Method Post -Uri http://localhost:<auth>/api/auth/token `
+  -Body '{"username":"demo","password":"demo"}' -ContentType 'application/json'
+```
+
+Or in the browser: `http://localhost:<auth>/swagger-ui.html`.
+
+---
+
+## 8. Three "gotchas" we learned along the way
+
+- **JDK 25 + Lombok**: since JDK 23, `javac` no longer runs the annotation processor automatically.
+  Fixed with `<proc>full</proc>` in the parent; without it the Lombok getters/setters are not
+  generated and tests fail on methods that "do not exist".
+- **google-java-format**: a newer version (1.37) broke the formatting plugin; it was pinned to
+  1.36.1. Lesson: in reproducible builds, pin versions instead of leaving them floating.
+- **`spring-boot:run` forks a child process**: when restarting, kill by the **listening port**, not
+  only the Maven process, or a ghost JVM will keep the port.
+
+---
+
+*Supporting guide for the project. The technical source of truth is `SPEC.md`; per-task detail,
+`tasks/todo.md`.*
+</file>
+
+<file path="README.md">
+# astro-java-test
+
+Monorepo with two independent, unrelated apps:
+
+| Folder | What it is | Status |
+| --- | --- | --- |
+| [`webapp/`](webapp/) | **Astro 7** app (default starter, untouched) | stock template |
+| [`server/`](server/) | **Spring Boot 3.5 microservices backend** (config/Eureka/auth) | in progress — T1–T8 done, T9–T11 pending |
+
+- The backend source of truth is [`SPEC.md`](SPEC.md) (22 closed decisions).
+- Progress lives in [`tasks/plan.md`](tasks/plan.md) and [`tasks/todo.md`](tasks/todo.md).
+- Narrative guide of everything built: [`GUIA.md`](GUIA.md).
+
+> The RS256 private key under `server/config-server/src/main/resources/config/auth-service.yml`
+> is **DEV-ONLY** (sample local service). It has no secret value: it protects nothing real and
+> generating your own takes 10 seconds (see "Generate your own key" in `server/`'s README).
+
+## Quick start
+
+Backend (from `server/`, in this order):
+
+```powershell
+./mvnw -B spring-boot:run -pl config-server     # 8888
+./mvnw -B spring-boot:run -pl discovery-server  # 8761
+./mvnw -B spring-boot:run -pl auth-service      # random port (see the log)
+./mvnw -B spring-boot:run -pl demo-service      # random port (see the log)
+./mvnw -B spring-boot:run -pl gateway-server    # 8080
+```
+
+Frontend (from `webapp/`):
+
+```powershell
+npm install
+npm run dev        # http://localhost:4321
+```
+
+Details, JWT flow and Swagger in [`server/README.md`](server/README.md).
+</file>
+
+<file path="server/config-server/src/main/resources/config/gateway-server.yml">
+# gateway-server (D3: fixed 8080; single entry point - D6). lb:// routes resolved by
+# name via Eureka (the services use random ports); the 2 api-docs loops let the
+# aggregated swagger at the gateway (T10) fetch each service's OpenAPI.
+# Spring Cloud Gateway 4.3.x server.webflux.* namespace verified against the jar
+# metadata: the legacy spring.cloud.gateway.* namespace is deprecated.
+# The Eureka URL arrives from the shared config (config/application.yml).
+server:
+  port: 8080
+
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: auth-token
+              uri: lb://auth-service
+              predicates:
+                - Path=/api/auth/token
+                - Method=POST
+            - id: demo-api
+              uri: lb://demo-service
+              predicates:
+                - Path=/api/demo/**
+            - id: api-docs-auth-service
+              uri: lb://auth-service
+              predicates:
+                - Path=/v3/api-docs/auth-service
+              filters:
+                - RewritePath=/v3/api-docs/auth-service, /v3/api-docs
+            - id: api-docs-demo-service
+              uri: lb://demo-service
+              predicates:
+                - Path=/v3/api-docs/demo-service
+              filters:
+                - RewritePath=/v3/api-docs/demo-service, /v3/api-docs
+
+# JWT public key (D21, DEV-ONLY pair): verifies the RS256 signatures that auth-service issues.
+# It matches the private key of auth-service.yml; both are sample local material, not secrets
+# (see "Generate your own key" in server/README.md to replace the pair).
+app:
+  jwt:
+    public-key: |-
+      -----BEGIN PUBLIC KEY-----
+      MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1jZFFmcXPAbKuS1vjxkD
+      DbIpx5OKcYxsdwtfdMZtx/4JCtnS/HZ4y7bowNrQ9THqidgjQQ4F9jX8ovSf1LCg
+      g1aU3+Jmu5SSTjZtFcvqXb1ptN0WoScraWG5Bf+Y3dR51kXgX8O9Q5aeauP31826
+      wgH32Xmc1/ZGzyGO9/SxAHP8xtpUXB5Uu+aZY1ZK3xjru+UwyvINf/ucdfZFE2+q
+      fpNF74YnqqBXDQXQ6PjN1/RLLyFwpf72cocDDIRUpOZUvot3A9gWn4bo+A8lbsKL
+      4aqMNmiHARr7tM7UtD8cbD3v/3Sq+nagre3cg1pXkA274JyEa/Ff/aeAP8FeZ7al
+      vwIDAQAB
+      -----END PUBLIC KEY-----
+</file>
+
+<file path="SPEC.md">
+# Spec: Spring microservices backend skeleton (`server/`)
+
+Status: **APROVED (SPECIFY closed) — in PLAN/IMPLEMENT phase.** Plan in `tasks/plan.md`, tasks in `tasks/todo.md`. No open questions.
+User rule: **assume nothing** — delegated decisions (Q7, Q12) are marked as such; everything else comes from explicit answers.
+
+---
+
+## Capability Map (Phase 0)
+
+| Module id | Responsibility | Depends on |
+|---|---|---|
+| `build-parent` | `server/pom.xml` (packaging `pom`): the **only place** that pins versions (Boot BOM + Spring Cloud + Lombok + springdoc + plugins) | — |
+| `config-server` | Spring Cloud Config Server, **native** backend ("config as code" in this same repo) | `build-parent` |
+| `discovery-server` | Eureka Server (1 node) | `build-parent` |
+| `auth-service` | **In-memory H2** (JPA) with a SQL-seeded user; **POST** endpoint that signs and issues **RS256** JWTs with a TTL configurable via config server | `build-parent`, `config-server` |
+| `demo-service` | GET returning `"Hello world!"` | `build-parent`, `config-server`, `discovery-server` |
+| `gateway-server` | Spring Cloud Gateway: single entry point; **verifies the JWT on every route** (except the whitelist), routes via Eureka and **serves aggregated Swagger UI** | `build-parent`, `config-server`, `discovery-server`, `auth-service` (JWT contract) |
+
+Build order: `build-parent` → [`config-server`, `discovery-server`] → [`auth-service`, `demo-service`] → `gateway-server`
+
+## Decisions (all closed)
+
+| # | Decision | Origin |
+|---|---|---|
+| D1 | Spring Boot **3.5.x (LTS)** + Spring Cloud **2025.0.x (Northfields)** — the only official GA train with Boot 3.5 that ships netflix+gateway+config (official matrix verified) | User |
+| D2 | groupId **`com.demo`**, packages `com.demo.<module>`, layers `adapter.in.web` / `application.service` / `domain` / `adapter.out` | User |
+| D3 | Ports: fixed **config 8888, eureka 8761, gateway 8080**; **random** (`server.port=0`) on `auth-service` and `demo-service` (they are discovered via Eureka; the client only sees 8080) | User + evaluation |
+| D4 | **Native** Config Server: everything as code in this same repo, no config git repo and no config scattered across services | User |
+| D5 | Services **do** read their config from the Config Server: `spring.config.import: optional:configserver:http://localhost:8888` + `spring.application.name` in their local `application.yml` (current standard pattern, verified against the official springdoc demo; **no `bootstrap.yml`** — a plan refinement over the original draft). Eureka URLs, RS256 keys and the JWT TTL travel this way | Accepted recommendation + verified at plan phase |
+| D6 | All business traffic **through the gateway**: `POST /api/auth/token`, `GET /api/demo/hello` → `lb://...`. No JWT → 401 | User |
+| D7 | Tests with **Mockito** | User |
+| D8 | **Lombok 1.18.48** forced (`lombok.version` in the parent; JDK 25 needs ≥1.18.40). `lombok.config` in `server/` | User + verified |
+| D9 | **Maven Wrapper: yes** (`mvn -N wrapper:wrapper`, versioned) | Accepted recommendation |
+| D10 | Build QA: **Spotless + SpotBugs(FindSecBugs) + Checkstyle** — "everything possible to improve overall quality" | User (Q2) |
+| D11 | **JaCoCo** with a report in `verify`; coverage threshold to be defined later | Accepted recommendation |
+| D12 | **Solitary Eureka** (1 node) | Accepted recommendation |
+| D13 | Compile with **`--release 21`** using the installed JDK 25 (installs nothing; only pins bytecode/APIs to Java 21, the standard LTS alongside Boot 3.5) | Delegated to the assistant (Q7) → **21** |
+| D14 | JWT **RS256**: private key only in `auth-service`, public key at the gateway | User (D14) |
+| D15 | JWT library: **nimbus via `spring-security-oauth2-resource-server`/`oauth2-jose`** (the standard Spring Security stack) | User |
+| D16 | `auth-service`: **in-memory H2** + **Spring Data JPA** + `schema.sql` + `data.sql` with a direct INSERT of the **fixed user `demo`/`demo`** hashed with **BCrypt** | User (Q13) |
+| D17 | **Swagger UI via springdoc-openapi 2.9.x** (the Boot 3.5 line, verified): per-service UI and **aggregated at the gateway** → `http://localhost:8080/swagger-ui.html`. No Postman | User |
+| D18 | `auth-service`/`demo-service` = **spring-boot-starter-web** (servlet); `gateway-server` = **WebFlux** (reactive, native to spring-cloud-gateway) | Verified technical consequence |
+| D19 | **JWT claims**: `sub` (user), `roles`, `iss` (`auth-service`), `exp` = **`app.jwt.expiration-seconds`**, a property read from the config server (`auth-service.yml`, default 3600). Changing the TTL = edit the file + restart `auth-service`, **no recompile** | User (Q6: asked for a config-server-driven TTL) |
+| D20 | **Gateway whitelist (no JWT)**: `POST /api/auth/token`, `/swagger-ui/**`, `/v3/api-docs/**`, `/actuator/health`. Everything else → 401 | User (Q5: "the ones you mention") |
+| D21 | **Fixed RS256 keys in the native config**: a pair in the config repo (private → `auth-service.yml`, public → `gateway-server.yml`). JWKS / real rotation discarded (clashes with random ports; Vault = out of scope) | User (Q11) |
+| D22 | Swagger **public via the gateway** and aggregated with Eureka discovery — the option that "actually works" with random ports: services are located by name, not by port. **Config verified at plan phase** against the official `springdoc-openapi-demos/demo-microservices`: routes `/{svc}/** → lb://` + loop `/v3/api-docs/{svc} → /v3/api-docs` + springdoc webflux-ui at the gateway; documented fallback `springdoc.swagger-ui.urls[]` if 2.9.1's automatic aggregation falls short | Delegated to the assistant (Q12) ✓ verified |
+
+## Objective
+
+A skeleton under `.\server\` as close as possible to a real enterprise application: Spring Boot 3.5 LTS + Config/Eureka/Gateway, an `auth-service` on H2 issuing RS256 JWTs (TTL configurable via config server), a sample `demo-service`, full build QA and aggregated Swagger UI at the gateway to test without Postman.
+
+Target flow:
+1. Open `http://localhost:8080/swagger-ui.html`.
+2. `POST /api/auth/token` with `demo`/`demo` → JWT (expiry per config).
+3. `GET /api/demo/hello` with `Authorization: Bearer <jwt>` → `Hello world!`.
+4. Same call without a token → `401`.
+
+Success criteria:
+1. Clean `./mvnw -B verify` from cold (JDK 25 + network): compiles, tests, formats and analyzes.
+2. Startup order config → eureka → auth/demo → gateway; the random-port services appear in Eureka.
+3. Full JWT flow via the gateway (steps 1–4), also covered by an E2E test (401 without/bad token, 200 with token).
+4. Changing `app.jwt.expiration-seconds` in the native `auth-service.yml` and restarting `auth-service` alters the TTL without recompiling.
+5. Zero `<version>` in child-module dependencies; versions only in `build-parent`.
+6. Swagger UI reachable through the gateway and endpoints testable from the browser.
+7. `webapp/` untouched.
+
+## Tech Stack
+
+**Machine (verified):** Amazon Corretto JDK 25.0.4.1 (`C:\dev\tools\Amazon Corretto\jdk25.0.4_10`), Maven 3.10.0 (`C:\dev\tools\apache-maven-3.10.0`), Windows 11.
+
+**Key versions (pinned at plan phase from Maven Central / official docs, Oct 2026):**
+- Spring Boot **3.5.16** (LTS; official docs: "compatible with versions up to and including Java 25" → the installed JDK 25 is valid) + Spring Cloud **2025.0.3** (latest Boot 3.5 train → netflix/gateway/config 4.3.x).
+- Lombok **1.18.48** · springdoc-openapi **2.9.1** (swagger-ui 5.32.14) · H2 (managed by Boot) · JaCoCo **0.8.15** · Spotless **3.10.4** · SpotBugs **4.10.5.0** (+FindSecBugs) · Checkstyle plugin **3.6.0** + tool **14.3.0** · Maven Wrapper **3.9.16**.
+
+**Dependencies per module** (all with no `<version>` in children):
+
+| Module | Main dependencies |
+|---|---|
+| `config-server` | `spring-cloud-config-server` |
+| `discovery-server` | `spring-cloud-starter-netflix-eureka-server` |
+| `auth-service` | `spring-boot-starter-web`, `-data-jpa`, `h2`, `spring-security-crypto`, `spring-boot-starter-security`, `oauth2-resource-server`, `springdoc-openapi-starter-webmvc-ui`, `actuator`, `lombok`(provided) |
+| `demo-service` | `spring-boot-starter-web`, `spring-cloud-starter-netflix-eureka-client`, `springdoc-openapi-starter-webmvc-ui`, `actuator`, `lombok`(provided) |
+| `gateway-server` | `spring-cloud-starter-gateway-server-webflux` (official starter rename in 4.3.x — the old `spring-cloud-starter-gateway` is deprecated and warns on every start; human decision in T8), `spring-cloud-starter-netflix-eureka-client`, `oauth2-resource-server`, `springdoc-openapi-starter-webflux-ui`, `actuator`, `lombok`(provided) |
+| all (test) | `spring-boot-starter-test` (includes Mockito) |
+
+## Commands
+
+Everything from `server/`:
+
+```powershell
+./mvnw -B verify                          # build + tests + formatting + analysis (the main check)
+./mvnw -B verify -pl demo-service -am     # a concrete module (+ dependencies)
+./mvnw spotless:apply                     # format by hand
+./mvnw -B spring-boot:run -pl config-server     # 8888
+./mvnw -B spring-boot:run -pl discovery-server  # 8761
+./mvnw -B spring-boot:run -pl auth-service      # random port (see the log)
+./mvnw -B spring-boot:run -pl demo-service      # random port (see the log)
+./mvnw -B spring-boot:run -pl gateway-server    # 8080
+mvn -N wrapper:wrapper                    # generate the wrapper (once; it is versioned)
+```
+
+Test without Postman: browser → `http://localhost:8080/swagger-ui.html`.
+CLI alternative:
+
+```powershell
+$jwt = (Invoke-RestMethod -Method Post -Uri http://localhost:8080/api/auth/token -Body '{"username":"demo","password":"demo"}' -ContentType 'application/json').token
+Invoke-RestMethod -Uri http://localhost:8080/api/demo/hello -Headers @{ Authorization = "Bearer $jwt" }  # "Hello world!"
+Invoke-WebRequest -Uri http://localhost:8080/api/demo/hello   # expected 401
+```
+
+## Project Structure
+
+```
+astro-java-test/
+├── SPEC.md              → this document
+├── webapp/              → UNTOUCHABLE (Astro app)
+└── server/
+    ├── pom.xml          → build-parent (single source of versions)
+    ├── mvnw, mvnw.cmd, .mvn/   → versioned wrapper
+    ├── lombok.config    → shared Lombok config
+    ├── config-server/
+    │   └── src/main/resources/config/    → NATIVE configuration repository
+    │       ├── application.yml          (shared: Eureka)
+    │       ├── auth-service.yml         (RS256 pair + app.jwt.expiration-seconds + H2)
+    │       ├── demo-service.yml
+    │       └── gateway-server.yml       (routes; public key in T9)
+    ├── discovery-server/
+    ├── auth-service/
+    │   └── src/main/resources/          → application.yml (name + spring.config.import),
+    │                                      schema.sql, data.sql (INSERT demo/BCrypt)
+    ├── demo-service/
+    └── gateway-server/
+```
+
+Tests: `src/test/java/com/demo/<module>/` mirroring the main package.
+
+## Code Style
+
+```java
+package com.demo.authservice.adapter.in.web;
+
+import lombok.Builder;
+import lombok.extern.jackson.Jacksonized;
+
+@Builder
+@Jacksonized
+public record TokenResponse(String token, long expiresIn) {}
+```
+
+```java
+package com.demo.authservice.application.service;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+public class TokenService {
+
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+    public TokenResponse issue(String username, String rawPassword) {
+        // validates against H2 (user seeded in data.sql with a BCrypt hash)
+        // signs RS256 with the private key; expires per app.jwt.expiration-seconds (config server)
+        return TokenResponse.builder().token("...").expiresIn(3600).build();
+    }
+}
+```
+
+Lombok rules (builders included in the learning curve):
+- **Immutables first**: DTOs = `record`. Lombok only where a record does not fit.
+- **`@Builder` + `@Jacksonized`** for DTOs Jackson deserializes; `@Builder.Default` mandatory for defaults; validation in the compact constructor.
+- **Avoid `@Data` on domain**; `@Value`/`@Getter`+`@Builder` for immutables.
+- `lombok.config` at `server/` root: `lombok.addLombokGeneratedAnnotation = true`.
+- Constructor injection (`private final`); `application.yml` in kebab-case; names per layer.
+
+## Testing Strategy
+
+- **Unit (Mockito):** JWT signing/claims/TTL (test private key), validation in the gateway's `JwtDecoder`, authentication against H2.
+- **Web slice:** `@WebMvcTest` + MockMvc for `TokenController` and `HelloController`.
+- **Context load:** `@SpringBootTest` per module (test profile: config server and Eureka registration disabled → passes from cold).
+- **Chain E2E (mandatory, D6):** gateway with a stubbed `demo-service`: no token → 401; valid RS256 token → 200 `Hello world!`; token signed with the wrong key → 401.
+- H2 in tests: `data.sql` also runs in the test context (it verifies the INSERT).
+- Command `./mvnw -B verify` (JaCoCo produces the report). No Docker and no external services.
+
+## Boundaries
+
+- **Always:**
+  - The whole backend inside `server/`; never touch `webapp/`.
+  - Versions ONLY in `build-parent`; children with no `<version>` on managed dependencies.
+  - `./mvnw -B verify` green before calling a task done.
+  - Startup order: config → eureka → auth/demo → gateway.
+  - Every business endpoint requires a JWT behind the gateway; whitelist only: token, swagger, health (D20).
+- **Ask first:**
+  - Adding dependencies/plugins not listed.
+  - Changing fixed ports (8888/8761/8080) or the random-port policy.
+  - Persistence beyond the auth's in-memory H2.
+  - Standing up SonarQube or any other infrastructure.
+  - Any change under `webapp/`.
+- **Never:**
+  - Expose the RS256 private key outside `auth-service`/native DEV config (all cryptographic material in this repo is DEV-ONLY, documented).
+  - Declare `<version>` on dependencies managed by the parent.
+  - Delete/disable broken tests without approval.
+
+## Glossary
+
+- **Maven Wrapper (`mvnw`)**: versioned scripts that use an exact Maven version on any machine. → D9.
+- **Formatting (Spotless)**: canonical code style; `verify` fails if violated, `spotless:apply` fixes it. → D10.
+- **Coverage (JaCoCo)**: % of lines exercised by tests (HTML report). Measures "how much the tests touch", not quality. → D11.
+- **Solitary Eureka**: 1 instance instead of an HA cluster. → D12.
+- **`--release 21`**: installs nothing; with your JDK 25 it pins bytecode/APIs to Java 21 (the standard LTS alongside Boot 3.5). → D13.
+- **`sub`/`iss`/`exp`**: *subject* = who the token is issued to (the user), *issuer* = who issued it (`auth-service`), *expiration* = expiry (configurable via config server, D19).
+- **HS256 vs RS256**: HS256 = shared secret (whoever validates can also sign); RS256 = key pair (only `auth-service` signs). → D14.
+- **SonarLint vs SonarQube**: SonarLint = IDE plugin, local; SonarQube = server with a DB and history (infra, out of scope). → D10.
+- **springdoc-openapi**: OpenAPI 3 + Swagger UI standard for Spring; the 2.9.x line for Boot 3.5 (verified).
+
+## Open Questions
+
+**None.** Explicit user delegations: Q7 (`--release 21`) and Q12 (public aggregated swagger at the gateway, the option that works with random ports). Everything else came as an explicit answer (Q2, Q5, Q6, Q11, Q13).
+
+---
+
+*Spec-driven-development: SPECIFY phase ✓ (approved) → PLAN ✓ (tasks/plan.md) → TASKS ✓ (tasks/todo.md) → IMPLEMENT in progress.*
+
+*Language policy: conversation with the user in Spanish; all repository artifacts (code, docs, commits) in English.*
+</file>
+
+<file path="server/gateway-server/pom.xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.demo</groupId>
+        <artifactId>build-parent</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>gateway-server</artifactId>
+    <name>gateway-server</name>
+    <description>Single entry point (8080): routes via Eureka and validates RS256 JWT (D6/D20/D21) - T8: lb:// routes</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-gateway-server-webflux</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>
+</file>
+
+<file path="server/pom.xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.5.16</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.demo</groupId>
+    <artifactId>build-parent</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>build-parent</name>
+    <description>Spring microservices skeleton - single source of versions (SPEC.md)</description>
+
+    <properties>
+        <!-- Compiles with the installed JDK 25 targeting Java 21 (D13) -->
+        <java.version>21</java.version>
+        <maven.compiler.release>21</maven.compiler.release>
+
+        <spring-cloud.version>2025.0.3</spring-cloud.version>
+        <springdoc.version>2.9.1</springdoc.version>
+        <lombok.version>1.18.48</lombok.version>
+
+        <!-- Build QA (D10): versions pinned here only -->
+        <spotless.version>3.10.4</spotless.version>
+        <!-- CAREFUL: gjf >= 1.37.0 moved Style from enum to record and breaks Spotless
+             3.10.4's glue (NoSuchMethodError Style.valueOf). Pinned to 1.36.1,
+             the plugin's own validated default.
+             See also ../.mvn/jvm.config (jdk.compiler exports, safety net). -->
+        <google-java-format.version>1.36.1</google-java-format.version>
+        <checkstyle-plugin.version>3.6.0</checkstyle-plugin.version>
+        <checkstyle.version>14.3.0</checkstyle.version>
+        <spotbugs.version>4.10.5.0</spotbugs.version>
+        <findsecbugs.version>1.14.0</findsecbugs.version>
+        <jacoco.version>0.8.15</jacoco.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-bom</artifactId>
+                <version>${springdoc.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- Modules: added as each task lands (T2: config-server, T4: discovery-server, ...) -->
+    <modules>
+        <module>config-server</module>
+        <module>discovery-server</module>
+        <module>auth-service</module>
+        <module>demo-service</module>
+        <module>gateway-server</module>
+    </modules>
+
+    <!-- Test dependency shared by every module (no <version>: pinned by Boot's BOM) -->
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- JDK 23+ disables the implicit classpath annotation processing
+                     (affects our JDK 25 even though we compile with release 21): without
+                     proc=full Lombok does not generate getters/setters. Needed by any
+                     module using Lombok. -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <proc>full</proc>
+                    </configuration>
+                </plugin>
+
+                <!-- Spotless: google-java-format for Java (D10). Apply with: ./mvnw spotless:apply -->
+                <plugin>
+                    <groupId>com.diffplug.spotless</groupId>
+                    <artifactId>spotless-maven-plugin</artifactId>
+                    <version>${spotless.version}</version>
+                    <configuration>
+                        <java>
+                            <removeUnusedImports/>
+                            <googleJavaFormat>
+                                <version>${google-java-format.version}</version>
+                            </googleJavaFormat>
+                        </java>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>spotless-check</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- Checkstyle: own rules in config/checkstyle.xml (tool 14.x via plugin dependency) -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${checkstyle-plugin.version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>${checkstyle.version}</version>
+                        </dependency>
+                    </dependencies>
+                    <configuration>
+                        <configLocation>${maven.multiModuleProjectDirectory}/config/checkstyle.xml</configLocation>
+                        <consoleOutput>true</consoleOutput>
+                        <failOnViolation>true</failOnViolation>
+                        <violationSeverity>error</violationSeverity>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>checkstyle-check</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- SpotBugs + FindSecBugs: static analysis with security rules -->
+                <plugin>
+                    <groupId>com.github.spotbugs</groupId>
+                    <artifactId>spotbugs-maven-plugin</artifactId>
+                    <version>${spotbugs.version}</version>
+                    <configuration>
+                        <effort>Max</effort>
+                        <threshold>Medium</threshold>
+                        <xmlOutput>true</xmlOutput>
+                        <failOnError>true</failOnError>
+                        <plugins>
+                            <plugin>
+                                <groupId>com.h3xstream.findsecbugs</groupId>
+                                <artifactId>findsecbugs-plugin</artifactId>
+                                <version>${findsecbugs.version}</version>
+                            </plugin>
+                        </plugins>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>spotbugs-check</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- JaCoCo: coverage report in verify (no minimum gate yet) -->
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco.version}</version>
+                    <executions>
+                        <execution>
+                            <id>prepare-agent</id>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>report</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <!-- Enabled here: inherited by every child module -->
+        <plugins>
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+</file>
+
+<file path="tasks/plan.md">
+# Implementation Plan: Spring microservices skeleton (`server/`)
+
+> Source of truth: [`../SPEC.md`](../SPEC.md) (approved, 22 closed decisions). This plan defines **how**, the spec defines **what**.
+
+## Overview
+
+Build under `server/` a Maven multi-module project with a parent (`build-parent`) that pins every version and five modules: `config-server` (native, 8888), `discovery-server` (Eureka, 8761), `auth-service` (H2 + RS256 JWT, random port), `demo-service` (`Hello world!`, random port) and `gateway-server` (8080, single entry point, validates JWT and serves aggregated Swagger UI). Build with full QA (Spotless, Checkstyle, SpotBugs+FindSecBugs, JaCoCo) and `--release 21` compiled with the installed JDK 25.
+
+## Architecture Decisions (by the plan, on top of the spec)
+
+- **Versions pinned today (Maven Central / official docs, Oct 2026)** — verified, not assumed:
+
+  | Component | Version | Source |
+  |---|---|---|
+  | Spring Boot | **3.5.16** (LTS; docs: "compatible with versions up to and including Java 25" ✓ JDK 25 OK) | docs.spring.io/spring-boot/3.5 |
+  | Spring Cloud | **2025.0.3** (latest Boot 3.5 train; 2025.1.x/2026.x target Boot 4) | Maven Central |
+  | springdoc-openapi | **2.9.1** (Boot 3.x line; swagger-ui 5.32.14 with XSS fix) | springdoc.org/v2 |
+  | Lombok | **1.18.48** (forced via `lombok.version`) | Maven Central |
+  | JaCoCo | **0.8.15** | Maven Central |
+  | Spotless plugin | **3.10.4** (+ google-java-format **1.36.1**; gjf ≥1.37.0 breaks the plugin glue when `Style` moves from enum to record) | Maven Central; root cause verified with `javap` in T3 |
+  | SpotBugs plugin | **4.10.5.0** (+FindSecBugs) | Maven Central |
+  | Checkstyle | plugin **3.6.0** + tool **14.3.0** | Maven Central |
+  | Maven Wrapper | **3.9.16** (latest stable 3.9.x; 4.0 is RC-only) | Maven Central |
+
+- **Config client without `bootstrap.yml`** — technical refinement of D5 (flag for the user): the standard pattern since Spring Cloud 2020.x is `spring-cloud-starter-config` + `spring.config.import: optional:configserver:http://localhost:8888` in each service's `application.yml` (exactly what the official `springdoc-openapi-demos/demo-microservices` does, verified). Each service carries its local `spring.application.name` and everything else travels from the config server. *(If you prefer classic `bootstrap.yml`, it can be switched before starting.)*
+- **RS256 keys** (D14/D21): pair generated with a single-file Java tool on JDK 25 (`keytool`/single-file program → PKCS#8 + X.509 PEMs). Private key only in `config-server/src/main/resources/config/auth-service.yml`, public key in `gateway-server.yml`. Marked DEV-ONLY.
+- **Gateway routes** (D6 + D22 aggregation), pattern verified against the official springdoc demo:
+  - `POST /api/auth/token` → `lb://auth-service` (the service owns its full path, no rewrite);
+  - `/api/demo/**` → `lb://demo-service`;
+  - OpenAPI loop: `/v3/api-docs/auth-service` and `/v3/api-docs/demo-service` → `lb://<service>` with `RewritePath` to `/v3/api-docs` (the demo's `openapi` self-loop, here explicit per service);
+  - ⚠️ Namespace note: in Spring Cloud **2025.0.x / Gateway 4.3.x** the config namespace is **`spring.cloud.gateway.server.webflux.*`** (the bare `spring.cloud.gateway.*` from the old starter is deprecated) — verified empirically in T8 against the jar metadata; `GatewayRouteDefinitionsTests` guards it.
+- **Aggregated swagger at the gateway**: try springdoc 2.9.1's automatic aggregation first (the one the official demo uses); if the UI does not list the services, the documented fallback is `springdoc.swagger-ui.urls[]` (same property in v2 docs) — same route design, no rework.
+- **auth-service security**: it has `spring-boot-starter-security` (required for resource-server/crypto) → its own security chain allowing `POST /api/auth/token`, swagger, actuator/health and protecting the rest; the real JWT requirement lives at the gateway (D6).
+- **H2** (D16): `jdbc:h2:mem:authdb`, `ddl-auto=none`, `schema.sql` + `data.sql` (INSERT of user `demo` with a precomputed BCrypt hash). Boot runs SQL init **before** JPA → the INSERT works without defer.
+- **Cold tests** (no network/services): test configs in `src/test/resources` with `spring.cloud.config.enabled=false` and Eureka disabled; the gateway E2E stubs `demo-service` (WebTestClient) and uses test RS256 keys in `src/test/resources`.
+
+## Dependency Graph
+
+```
+build-parent (T1)  ── versions + inherited QA (reactor root)
+├── config-server (T2) :8888 ────────────┐
+└── discovery-server (T4) :8761 ─────┐   │
+                                     │   │
+        auth-service  (T5 → T6) ◄────┼───┘   H2/seed + RS256 JWT
+        demo-service  (T7)      ◄────┼───┘   hello + registration
+                                     │
+        gateway-server (T8 → T9 → T10) ◄┘    routes + JWT validation + swagger
+                │
+                └── T11: README + 7 success criteria (closing)
+```
+
+- **Build (reactor):** parent → [`config`, `discovery`] → [`auth`, `demo`] → `gateway`; `./mvnw -B verify` respects it automatically.
+- **Runtime:** config → eureka → auth/demo → gateway; the checkpoints respect it.
+- **Only coupling between modules:** the JWT contract — T6 signs `sub`/`roles`/`iss`/`exp`, T9 validates them with the public key from the config (D14/D21). A mismatch is resolved in T9 unless explicitly decided.
+
+## Vertical Slicing
+
+Every task leaves a complete, checkable path (no layer-by-layer building):
+
+| Task | Complete path left green |
+|---|---|
+| T2 | The "as-code" config serves properties over HTTP (server + native repo + test) |
+| T3 | `verify` fails on any formatting/style/security violation (RED/GREEN on config-server) |
+| T4 | Discovery operational: Eureka alone, boots cold with nothing else |
+| T5 | `auth` boots with the `demo` user seeded in H2 and degrades cleanly without the config server |
+| T6 | `POST /api/auth/token` returns a verifiable RS256 JWT with the config-driven TTL |
+| T7 | `GET /api/demo/hello` → `Hello world!` + Eureka registration |
+| T8 | The gateway routes to random-port services discovered by name |
+| T9 | Protected critical path: 01 without/bad token → 200 with token (E2E inside `verify`) |
+| T10 | The whole flow testable from the browser (aggregated Swagger, no Postman) |
+| T11 | Another person can start and test the system following the README |
+
+## Task List
+
+> Per-task detail (criteria, verification, files) in [`todo.md`](todo.md).
+
+### Phase 1: Foundations
+- [x] **T1**: `server/pom.xml` parent + `lombok.config` + Maven Wrapper → *detail in `todo.md`*
+- [x] **T2**: native `config-server` (8888) + shared native-repo config
+- [x] **T3**: QA in the build (Spotless + Checkstyle + SpotBugs/FindSecBugs + JaCoCo), validated with `config-server`
+
+### Phase 2: Discovery + Auth
+- [x] **T4**: `discovery-server` Eureka (8761, single node)
+
+### Checkpoint 1 (after T1–T4) — *deliberately postponed until here: starts config+eureka together, no double visit*
+- [x] `./mvnw -B verify` green with QA active and no JDK 25 toolchain errors (verified in T3)
+- [x] `config-server` (8888) serves `/{application}/{profile}` and `discovery-server` (8761) serves its dashboard *(with the human)*
+- [x] Review/pause with the human before continuing to T5 *(done; Eureka self-preservation banner: keep it, see `todo.md` T4)*
+
+- [x] **T5**: `auth-service`: web skeleton + config client + Eureka + H2/JPA with `schema.sql`/`data.sql`
+- [x] **T6**: `auth-service`: RS256 JWT issuing (`POST /api/auth/token`), TTL via config server, unit + web tests
+
+### Checkpoint 2 (after T5–T6)
+- [x] Eureka visible on 8761 with `auth-service` registered on a random port *(with the human: AUTH-SERVICE UP on 64107)*
+- [x] `POST http://localhost:<auth-port>/api/auth/token` with `demo`/`demo` returns a JWT whose `exp` matches the config *(with the human via the service's own Swagger UI: 200 + token with exp−iat=3600; bad password → 401 + ErrorResponse)*
+- [x] `./mvnw -B verify` green (BUILD SUCCESS, exit 0)
+
+### Phase 3: Demo + Gateway
+- [x] **T7**: `demo-service`: `GET /api/demo/hello` → `"Hello world!"` + Eureka + config client + springdoc
+- [x] **T8**: `gateway-server`: routes via Eureka (auth/demo + `/v3/api-docs/**` loop) with config from the config server
+- [x] **T9**: `gateway-server`: RS256 JWT validation (public key from config) + whitelist (D20) + E2E tests (no token 401 / valid token 200 / wrong key 401)
+
+### Checkpoint 3 (after T7–T9)
+- [ ] Full flow through the gateway: token → `GET /api/demo/hello` → `Hello world!`; no token → 401
+- [ ] `./mvnw -B verify` green (including the chain E2E)
+
+### Phase 4: Aggregated Swagger and closing
+- [ ] **T10**: Aggregated Swagger UI at the gateway (`http://localhost:8080/swagger-ui.html`) with auth and demo docs
+- [ ] **T11**: `server/README.md` (startup order, commands, Swagger flow), global `./mvnw -B verify` and a manual walkthrough of the spec's 7 success criteria
+
+### Final checkpoint
+- [ ] The 7 success criteria of SPEC.md verified one by one
+- [ ] `webapp/` untouched
+- [ ] Review with the human
+
+## Risks and Mitigations
+
+| Risk | Impact | Mitigation |
+|---|---|---|
+| google-java-format (Spotless) fails on the build JVM (JDK 25) | Medium | **Materialized in T3**: gjf 1.37.0 broke Spotless 3.10.4's glue (`Style` enum→record, no `valueOf`) → pin **1.36.1** (the plugin's validated default). The `palantir-java-format` fallback was not needed. `server/.mvn/jvm.config` with the `jdk.compiler` `--add-exports` stays as a safety net (optional today: Spotless opens the modules via `Unsafe`) |
+| SpotBugs/FindSecBugs on JDK 25 | Medium | Pin 4.10.5.0 (modern ASM); we compile to bytecode 21; document any targeted exclusions |
+| springdoc 2.9.1 does not aggregate gateway routes automatically | Low | Fallback `springdoc.swagger-ui.urls[]` (documented in v2); same routes, no rework |
+| `spring.cloud.gateway.*` (2025.0.x) vs `.server.webflux` namespace | Low | **Resolved in T8**: verified empirically against the 4.3.5 jar metadata; the correct namespace is `spring.cloud.gateway.server.webflux.*` and the test `GatewayRouteDefinitionsTests` guards it |
+| H2/JPA vs `schema.sql`/`data.sql` | Low | Native Boot order: SQL init before JPA; `ddl-auto=none`; verified in T5/T6 |
+| Cold tests need the config server/Eureka down | Low | Test configs with config/Eureka disabled since T5; E2E with a stub |
+| Wrapper/deps download on first build | Low | Network verified today; wrapper pinned to 3.9.16 |
+</file>
+
+<file path="tasks/todo.md">
+# Task List: Spring microservices skeleton (`server/`)
+
+> Implementation detail; global vision and risks in [`plan.md`](plan.md). Source of truth: [`../SPEC.md`](../SPEC.md).
+> Golden rules: versions ONLY in `build-parent`; `webapp/` untouched; `./mvnw -B verify` green before marking any task done.
+
+---
+
+## Task 1: `build-parent` + `lombok.config` + Maven Wrapper
+
+**Description:** Create `server/pom.xml` with packaging `pom` as the single source of versions: spring-boot-starter-parent 3.5.16 parent, Spring Cloud 2025.0.3 BOM, springdoc 2.9.1 BOM, `lombok.version=1.18.48`, `<java.version>21` (compiled with the installed JDK 25), empty `<modules>` for now and `pluginManagement` with maven-compiler (`release 21`) and surefire. Add `lombok.config` (`lombok.addLombokGeneratedAnnotation = true`) and generate the Maven Wrapper with `-Dmaven=3.9.16`.
+
+**Acceptance criteria:**
+- [x] `server/pom.xml` with `com.demo:build-parent:0.1.0-SNAPSHOT`, `java.version=21`, Lombok/springdoc/Cloud versions pinned; no stray unnecessary `<version>`
+- [x] `mvnw`, `mvnw.cmd` and `.mvn/wrapper/` generated and versioned (wrapper 3.9.16 — `mvnw -v` confirms Maven 3.9.16 + JDK 25.0.4.1)
+- [x] `lombok.config` in `server/` with `addLombokGeneratedAnnotation`
+
+**Verification:**
+- [x] Build: `./mvnw -B verify` from `server/` (parent only, green — BUILD SUCCESS)
+- [x] Manual: `./mvnw -v` uses the wrapper (3.9.16) with no global Maven
+
+**Dependencies:** none
+**Files likely touched:** `server/pom.xml`, `server/lombok.config`, `server/mvnw`, `server/mvnw.cmd`, `server/.mvn/wrapper/*`
+**Estimated scope:** S (3-5 config files)
+
+---
+
+## Task 2: Native `config-server` (8888) + native config repository
+
+**Description:** `config-server` module with `spring-cloud-config-server`, active `native` profile, port 8888, `search-locations: classpath:/config`, and the main class annotated `@EnableConfigServer`. Create `src/main/resources/config/application.yml` (shared: `eureka.client.service-url.defaultZone`, `eureka.instance.prefer-ip-address`). No Eureka dependency (it starts first; D5/startup order). The per-service `<service>.yml` files are created in each service's task (T5/T6, T8).
+
+**Acceptance criteria:**
+- [x] `ConfigServerApplication` boots on 8888 with the native profile (test context started with the `native` profile ✓)
+- [ ] `GET http://localhost:8888/application/default` returns JSON with the shared properties → *manual, deferred to Checkpoint 1 alongside Eureka (avoids starting twice)*
+- [x] `@SpringBootTest` context test passes with the test `spring.cloud.config.server.native.search-locations`
+
+**Verification:**
+- [x] Tests: `./mvnw -B verify -pl config-server -am` (BUILD SUCCESS, 1 test OK)
+- [ ] Manual: start + `Invoke-RestMethod http://localhost:8888/application/default` → *Checkpoint 1*
+
+**Dependencies:** T1
+**Files likely touched:** `server/config-server/pom.xml`, `.../ConfigServerApplication.java`, `.../application.yml`, `.../resources/config/application.yml`, `src/test/java/.../ConfigServerApplicationTests.java`
+**Estimated scope:** S (4-6 files)
+
+---
+
+## Task 3: QA in the build (Spotless + Checkstyle + SpotBugs/FindSecBugs + JaCoCo)
+
+**Description:** In the parent: `pluginManagement` + `<plugins>` (inherited by all children) with Spotless 3.10.4 (`google-java-format` **pinned to 1.36.1**, `spotless:check` in `verify`), maven-checkstyle-plugin 3.6.0 with tool checkstyle 14.3.0 and sanitized own rules (`config/checkstyle.xml`: short set — tabs, EOF, LineLength 120, UnusedImports, NeedBraces, EqualsHashCode, ...), spotbugs-maven-plugin 4.10.5.0 with FindSecBugs 1.14.0 (`failOnError`, effort Max, threshold Medium), and JaCoCo 0.8.15 (`prepare-agent` + `report` in `verify`, no gate). JDK 25 toolchain fail-fast worked around.
+
+**Finding (recorded decision):** gjf ≥ 1.37.0 broke binary compatibility: `JavaFormatterOptions$Style` moved from enum to record and dropped `valueOf(String)`, which Spotless 3.10.4's glue invokes → `NoSuchMethodError` wrapped in `InvocationTargetException` (verified with `javap` on both versions). Solution: pin gjf to **1.36.1** (the plugin's own validated default). The fallback to palantir-java-format was not needed. Additionally `server/.mvn/jvm.config` exports `jdk.compiler/com.sun.tools.javac.*` to the build JVM: optional today (Spotless opens the modules via `Unsafe`, with a deprecation warning on JDK 25) but kept as a safety net for when the JDK removes that `Unsafe`.
+
+**Acceptance criteria:**
+- [x] The 4 plugins run in `./mvnw -B verify` with no JDK 25 errors (gjf pinned to 1.36.1; no fallback)
+- [x] Sanitized rules: 0 Checkstyle violations and 0 SpotBugs bugs on the current code, FindSecBugs active
+- [x] Reports generated: `target/site/jacoco/` (index.html + jacoco.xml), `spotbugsXml.xml`, `checkstyle-result.xml`
+
+**Verification:**
+- [x] Build: global `./mvnw -B verify` and `-pl config-server -am` (BUILD SUCCESS, `LASTEXITCODE=0`)
+- [x] Manual RED/GREEN: break formatting → `verify` fails at `spotless:check`; `./mvnw spotless:apply` fixes it and returns to green
+
+**Dependencies:** T2 (needs a real module to validate)
+**Files likely touched:** `server/pom.xml`, `server/config/checkstyle.xml`, possible `spotbugs-exclude.xml`, `server/config-server` (formatting)
+**Estimated scope:** M (3-5 files + rule iteration)
+
+---
+
+## Task 4: `discovery-server` Eureka (8761, 1 node)
+
+**Description:** `discovery-server` module with `spring-cloud-starter-netflix-eureka-server`, port 8761, main class `@EnableEurekaServer`, self-registration disabled (`register-with-eureka: false`, `fetch-registry: false`, D12 solitary). No config server (independent to avoid startup cycles).
+
+**Acceptance criteria:**
+- [x] Boots on 8761 and serves the Eureka dashboard *(test context: "Started Eureka Server"; browser → Checkpoint 1)*
+- [x] It does not register itself nor contact the config server *("Client configured to neither register nor query for data"; no config dependency in the pom)*
+- [x] Context test passes cold (no network)
+
+**Verification:**
+- [x] Tests: `./mvnw -B verify -pl discovery-server -am` (RED→GREEN: no main class → `IllegalStateException`; with it → 1 test OK, Eureka starts in the context)
+- [ ] Manual: browser `http://localhost:8761/` → *Checkpoint 1 (together with config-server)*
+
+**Minor finding:** new files with LF line endings → Spotless requires CRLF (like the rest of the repo); `./mvnw spotless:apply` fixes them. Flow already documented in T3, nothing new.
+**Decision (human):** the "EMERGENCY! EUREKA MAY BE INCORRECTLY..." banner on the dashboard = self-preservation mode, expected in dev (0 services → 0 renewals below the solitary node's minimum threshold of 1). **Left enabled**: it self-heals once auth/demo register (T5+, each renews twice per minute). Do not touch `eureka.server.enable-self-preservation`.
+
+**Dependencies:** T1
+**Files likely touched:** `server/discovery-server/pom.xml`, `.../DiscoveryServerApplication.java`, `.../application.yml`, context test
+**Estimated scope:** S
+
+---
+
+## ✅ Checkpoint 1 (after T1–T4)
+
+- [x] Full `./mvnw -B verify` green with QA active (verified in T3)
+- [x] `config-server` (8888) and `discovery-server` (8761) boot and respond *(with the human: correct JSON from `/application/default` with the 2 native properties; Eureka dashboard loads)*
+- [x] Review/pause with the human before continuing to T5 *(done; recorded decision about the Eureka self-preservation banner, see T4)*
+
+---
+
+## Task 5: `auth-service`: web skeleton + config client + Eureka + H2/JPA with seed
+
+**Description:** `auth-service` module (spring-boot-starter-web, -data-jpa, h2, spring-security-crypto, actuator, eureka-client, spring-cloud-starter-config, springdoc webmvc-ui, lombok provided). Local `application.yml` with `spring.application.name=auth-service` and `spring.config.import: optional:configserver:http://localhost:8888` (D5 refinement). `schema.sql` (`users` table: username PK, password_hash, roles) + `data.sql` with the direct INSERT of the fixed user `demo` (precomputed BCrypt hash). JPA entity/repo (`UserAccount` + `UserAccountRepository extends JpaRepository`). `ddl-auto=none`. Test config in `src/test/resources` (no config server/Eureka). Create `config/auth-service.yml` on the config server with `server.port: 0`.
+
+**Acceptance criteria:**
+- [x] Test context green with H2 + `data.sql` executed *(3/3 tests: context + `findByUsername("demo")` with `BCryptPasswordEncoder.matches("demo", …)` + count=1)*
+- [x] Boots with the config server up and registers in Eureka on a random port *(`Located environment: name=auth-service`, `jdbc:h2:mem:authdb` remote; Eureka: AUTH-SERVICE UP on a random port, e.g. 56749)*
+- [x] Without the config server, degrades cleanly in local mode (`optional:configserver`) with a random port *(WARN "Could not locate PropertySource" with `optional = true` → boots in 2.5 s on a random port e.g. 59493 and registers via the client's Eureka default)*
+
+**Verification:**
+- [x] Tests: `./mvnw -B verify -pl auth-service -am` (RED→GREEN: compile without `adapter.out` → 3/3 OK)
+- [x] Manual: start config → eureka → auth; verify registration *(REST API `/eureka/apps` shows AUTH-SERVICE UP with a random port; the dashboard for the human was left for Checkpoint 2)*
+- [x] Global regression: `./mvnw -B verify` green with the 4 modules (BUILD SUCCESS, exit 0)
+
+**Findings:**
+- **Lombok + JDK 25 (toolchain):** `javac` on JDK ≥23 no longer runs the implicit classpath annotation processing → the entity's `@Getter/@Setter` were not generated and the seed test failed on nonexistent methods. Fix in `build-parent` (maven-compiler-plugin `pluginManagement` with `<proc>full</proc>`), needed for any future module with Lombok. Compiling with `--release 21` did not mitigate it.
+- **Injection in tests:** a JUnit 5 constructor with a Spring parameter gives `ParameterResolutionException` in this setup → `@Autowired` field injection in tests (the constructor-injection rule applies to production code).
+- **Test config = shadow classpath:** instead of the planned `test` profile, `src/test/resources/application.yml` **replaces** the main one on the test classpath (config import and Eureka disabled). Rationale: guaranteed cold determinism even with services running locally; with a `test` profile the remote import could resolve before being disabled.
+- **`server.port: 0` also in the local `application.yml`** (not only in the remote config): if the config server is down, the remote config never arrives and the local port decides — that way degraded mode still honors D3.
+- **`ddl-auto: none` locally and in the test shadow** (not only remotely): with embedded H2 the default is `create-drop`, which would wipe the `data.sql` seed (SQL init runs before JPA).
+- BCrypt hash of `demo` precomputed with a JDK 25 source-launcher against `spring-security-crypto-6.5.11.jar` from m2 (temp, now deletable).
+- *Operational note:* `spring-boot:run` forks — killing only the Maven wrapper leaves the app JVM orphaned (had to free 8888 manually); killing by listening port is the reliable kill.
+
+**Dependencies:** T2, T4
+**Files likely touched:** `server/auth-service/pom.xml`, `.../application.yml`, `AuthServiceApplication.java`, `adapter/out/UserAccount.java`, `adapter/out/UserAccountRepository.java`, `schema.sql`, `data.sql`, tests, `server/config-server/src/main/resources/config/auth-service.yml`
+**Estimated scope:** M (6-8 files)
+
+---
+
+## Task 6: `auth-service`: RS256 JWT issuing with configurable TTL
+
+**Description:** Generate a dev RSA 2048 pair (Java single-file script on JDK 25 → PKCS#8 + X.509 PEMs) and put it in `config/auth-service.yml` (inline private key + `app.jwt.expiration-seconds: 3600`, D19/D21). `TokenService` (application.service) with nimbus (`RSASSASigner`): validates credentials against H2 with `BCryptPasswordEncoder` and signs the JWT with claims `sub`, `roles`, `iss=auth-service`, `exp` from `app.jwt.expiration-seconds`. `TokenController` (adapter.in.web) `POST /api/auth/token` → record `TokenResponse(token, expiresIn)` with `@Builder @Jacksonized`. SecurityFilterChain allowing token/swagger/health. Tests: Mockito unit tests (signing, claims, expiry, invalid credentials), `@WebMvcTest` of the controller, context with test keys in `src/test/resources`.
+
+**Acceptance criteria:**
+- [x] `demo`/`demo` → RS256 JWT with `sub=demo`, `iss=auth-service`, `exp` matching `app.jwt.expiration-seconds`; invalid password → 401/400 *(200 + verified token; bad password → 401 + `{"code":401,"message":"Invalid credentials","timestamp":...}`)*
+- [x] Changing `app.jwt.expiration-seconds` on the config server + restarting auth changes the TTL without recompiling (spec success criterion 4) *(3600→1800 and back to 3600 by editing only `config/auth-service.yml` + restart; `exp−iat` = 1800 and later 3600, no code touched)*
+- [x] Unit + web + context test coverage green; the private key never present outside config/`auth-service` *(auth-service ~91% line coverage; the private key lives only in `config/auth-service.yml`)*
+
+**Verification:**
+- [x] Tests: `./mvnw -B verify -pl auth-service -am` (12/12, 0 SpotBugs, 0 checkstyle, spotless clean)
+- [x] Global regression: `./mvnw -B verify` → BUILD SUCCESS, exit 0 (4 modules)
+- [x] Manual: `demo`/`demo` → 200; signature RS256 **VALID** against the DEV public key (source-launcher `VerifyJwt.java` on `sha256withRSA`); claims `sub=demo`, `iss=auth-service`, `roles=ROLE_USER`, `exp−iat=3600`; TTL reconfigured without recompiling (see AC2)
+
+**Findings:**
+- **Lombok + Jacksonized:** the correct key in `lombok.config` is `lombok.jacksonized.jacksonVersion = 2` (verified on projectlombok.org; the variant `lombok.jacksonized.useJackson3` does NOT exist → "unknown key").
+- **SpotBugs `CT_CONSTRUCTOR_THROW`** in `TokenService` (throws from the constructor via guards) → `final` class as the canonical mitigation; Mockito's inline-mock-maker mocks it without issue.
+- **No `starter-validation`** (not listed in the SPEC table → Boundaries ask-first): blank/null guard in `TokenService` → unified 401 via `GlobalExceptionHandler` with `ErrorResponse(code,message,timestamp)` (own choice, documented).
+- **D2 exit port:** `UserAccounts` (interface + nested `Credentials` record) in `application.service`; `JpaUserAccounts` in `adapter.out`.
+- **Test key**: disposable TEST pair (private+public) in `src/test/resources/application.yml` (classpath shadow); the public key lets the context test verify the signature.
+- **Correct import**: `org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer` (the `...configuration` package does not exist); `spotless:apply` reorders imports — do not edit pre-spotless text.
+- **Eureka stale registration**: after restarting a service, the dashboard/API may return the previous instance (old port) for ~30 s → verify the port is actually listening before requesting, or wait for the registry refresh.
+
+**Dependencies:** T5
+**Files likely touched:** `.../application/service/TokenService.java`, `.../adapter/in/web/TokenController.java`, `.../adapter/in/web/TokenResponse.java`, `.../adapter/in/web/SecurityConfig.java`, `config/auth-service.yml` (keys), key-gen test, unit/web tests
+**Estimated scope:** M (6-8 files)
+
+---
+
+## ✅ Checkpoint 2 (after T5–T6)
+
+- [x] Eureka dashboard shows `auth-service` with a random port *(with the human)*
+- [x] The token flow works over the direct port and the TTL is configurable via config *(with the human: demo/demo token via Swagger UI + TTL 3600→1800→3600 without recompiling)*
+- [x] `./mvnw -B verify` green
+
+---
+
+## Task 7: `demo-service`: `GET /api/demo/hello` → `"Hello world!"`
+
+**Description:** `demo-service` module (web, eureka-client, spring-cloud-starter-config, springdoc webmvc-ui, actuator, lombok). `HelloController` (adapter.in.web) returning `"Hello world!"` (plain text). `spring.application.name=demo-service` + `spring.config.import`. Create `config/demo-service.yml` on the config server (`server.port: 0`). Tests: controller unit test + `@WebMvcTest` + cold context.
+
+**Acceptance criteria:**
+- [x] `GET /api/demo/hello` returns 200 `"Hello world!"`; registered in Eureka on a random port *(`body = [Hello world!]` as plain text from random port 51295; Eureka: DEMO-SERVICE UP on 51295)*
+- [x] Swagger UI accessible on the service's random port (`/swagger-ui.html`) *(`/v3/api-docs` with path `/api/demo/hello` + `/swagger-ui.html` respond on the random port)*
+- [x] Tests green from cold *(3/3: unit `HelloControllerTests`, `@WebMvcTest HelloControllerWebTests` with text/plain, context `DemoServiceApplicationTests` with no config server nor Eureka)*
+
+**Verification:**
+- [x] Tests: `./mvnw -B verify -pl demo-service -am` (RED→GREEN: without `HelloController` → `cannot find symbol`; with it → BUILD SUCCESS, 0 checkstyle, 0 SpotBugs)
+- [x] Manual: `Invoke-RestMethod http://localhost:<demo>/api/demo/hello` → `Hello world!`; Eureka registration and swagger-ui verified with config→eureka→demo started in that order (processes later killed by port)
+- [x] Global regression: `./mvnw -B verify` green with the 5 modules (BUILD SUCCESS, exit 0)
+
+**Traceability note:** `spring-cloud-starter-config` included per D5 (T5's config-client pattern) even though SPEC.md's dependency table does not list it for demo-service; this task's description in `tasks/todo.md` does plan it.
+
+**Dependencies:** T2, T4
+**Files likely touched:** `server/demo-service/pom.xml`, `.../application.yml`, `DemoServiceApplication.java`, `adapter/in/web/HelloController.java`, tests, `config-server/.../config/demo-service.yml`
+**Estimated scope:** S
+
+---
+
+## Task 8: `gateway-server`: routes via Eureka + api-docs loop
+
+**Description:** `gateway-server` module (spring-cloud-starter-gateway-server-webflux — **WebFlux**; starter renamed in 4.3.x per the human decision on the T8 finding —, eureka-client, spring-cloud-starter-config, springdoc webflux-ui, actuator, lombok). Routes in `config/gateway-server.yml` (config server, D5): `POST /api/auth/token` → `lb://auth-service`; `/api/demo/**` → `lb://demo-service`; openapi loop `/v3/api-docs/auth-service` and `/v3/api-docs/demo-service` → `lb://<svc>` with `RewritePath` to `/v3/api-docs` (official springdoc demo pattern; the 2025.0.x `spring.cloud.gateway.server.webflux.*` namespace). Create `config/gateway-server.yml` with port 8080 and the Eureka URL.
+
+**Acceptance criteria:**
+- [x] Boots on 8080 (reads routes from the config server) and routes to services by name (discovers random ports via Eureka) *(`GET :8080/api/demo/hello` → `Hello world!` via lb://demo-service:60776 and `POST :8080/api/auth/token` → 483-char token via lb://auth-service:58927; the gateway has no local routes: they came from the config server)*
+- [x] `GET http://localhost:8080/v3/api-docs/demo-service` returns the demo-service OpenAPI (no security yet) *(OpenAPI 3.1.0 with path `/api/demo/hello`; the auth loop also verified: `/api/auth/token`)*
+- [x] Clean boot with no fatal namespace/compatibility warnings *(namespace `server.webflux` with no notices; see findings: remaining NON-fatal deprecation warnings from the starter itself in 4.3.x → human decision pending, later resolved — see findings)*
+
+**Verification:**
+- [x] Tests: `./mvnw -B verify -pl gateway-server -am` (2/2: cold context + `GatewayRouteDefinitionsTests` validating that the 4 routes parse from the correct namespace)
+- [x] Manual: start config → eureka → auth → demo → gateway and try the 3 URLs *(initial 503 Service Unavailable = Eureka registry cache (~30 s, same family as T6); after the refresh, all 200. GATEWAY-SERVER registered UP:8080)*
+- [x] Global regression: `./mvnw -B verify` green with the 6 modules (BUILD SUCCESS, exit 0)
+
+**Findings:**
+- **Spring Cloud Gateway 4.3.x namespace verified empirically**: extracted `META-INF/spring-configuration-metadata.json` from the `spring-cloud-gateway-server-4.3.5.jar` in m2 → `spring.cloud.gateway.*` (legacy, deprecated) and **`spring.cloud.gateway.server.webflux.*`** (current) coexist. Routes use the new namespace. `GatewayRouteDefinitionsTests` is the safety net: with a wrong namespace no routes would be registered and the test would fail in `verify` (not at runtime).
+- **Starter deprecation in 4.3.x (RESOLVED with the human)**: `spring-cloud-starter-gateway` logs `spring-cloud-starter-gateway is deprecated... use spring-cloud-starter-gateway-server-webflux instead` on every start (and the `spring-cloud-gateway-server` artifact asks for `spring-cloud-gateway-server-webflux`). Not fatal, but Boundaries ask-first (the new starter was not listed in the SPEC) → **human decision: switch** → dependency replaced by `spring-cloud-starter-gateway-server-webflux` in a separate commit and SPEC.md updated. Verified: boot with no warning.
+- **Eureka timing on lb://**: requests against `lb://` routes within ~30 s of boot return 503 (the Eureka server's response cache); after the registry refresh, 200. Same phenomenon as T6's stale registration.
+- **Routes test**: `RouteDefinitionLocator.getRouteDefinitions()` returns a `Flux` (Reactor), not a `Stream`; and there are several locator beans → autowire `List<RouteDefinitionLocator>` + `Flux.fromIterable(...).flatMap(...)`.
+- **Auth predicate**: `Path=/api/auth/token` **+ `Method=POST`** (the SPEC describes POST; with Path alone, GET would also route to auth).
+
+**Dependencies:** T4, T5, T7
+**Files likely touched:** `server/gateway-server/pom.xml`, `.../application.yml`, `GatewayServerApplication.java`, `config-server/.../config/gateway-server.yml`, context test
+**Estimated scope:** M
+
+---
+
+## Task 9: `gateway-server`: RS256 JWT validation + whitelist + E2E tests
+
+**Description:** Inline public key in `config/gateway-server.yml` (D21) → `NimbusReactiveJwtDecoder` (RS256). `SecurityWebFilterChain`: token-free whitelist (D20: `POST /api/auth/token`, `/swagger-ui/**`, `/v3/api-docs/**`, `/actuator/health`), everything else requires a valid Bearer JWT → otherwise 401. `iss` claims validated against `auth-service`. E2E tests with WebTestClient and a stubbed `demo-service`: no token → 401; token signed with the valid key → 200 `"Hello world!"`; token with a foreign key or expired → 401. Decoder unit tests with a test key.
+
+**Acceptance criteria:**
+- [x] `GET /api/demo/hello` without token → 401; with valid token → 200 `Hello world!`; badly-signed/expired token → 401 *(E2E: 5 rejection cases + happy path; manual against 8080: no token → 401, garbage token → 401, valid Bearer → `[Hello world!]`)*
+- [x] `POST /api/auth/token` and `/swagger-ui/**`, `/v3/api-docs/**`, `/actuator/health` pass without a JWT *(manual: POST token → 483-char JWT, `/actuator/health` → UP, `/v3/api-docs/demo-service` → OpenAPI 3.1.0, `/swagger-ui.html` → 200; E2E asserts the same)*
+- [x] Coverage: the chain E2E test (spec success criterion 3) green inside `./mvnw -B verify` *(8 E2E + 4 decoder unit tests = 14/14 gateway tests in the global verify)*
+
+**Verification:**
+- [x] Tests: `./mvnw -B verify -pl gateway-server -am` *(green; global `./mvnw -B verify` → BUILD SUCCESS, 6/6 modules, exit 0)*
+- [x] Manual: SPEC.md PowerShell script (token → hello 200; no token → 401) against 8080 *(5 services up in order; auth:51104, demo:51100, gateway:8080; killed by listening port afterwards)*
+
+**Findings:**
+- **Indexed list properties do not merge across property sources**: registering `spring.cloud.gateway.server.webflux.routes[N].uri` via `@DynamicPropertySource` shadowed the whole element (empty `predicates` → `@NotEmpty` `BindValidationException` on `GatewayProperties`). Fix: keep the list in the yml and route the URI through a placeholder — `uri: ${gateway.stub.base-url:lb://auth-service}` — so the E2E injects one scalar property while the routes test resolves the production-shaped default.
+- **Reactive decoder builder differs from the servlet one**: `NimbusReactiveJwtDecoder.withPublicKey(...).build()` has no `jwtValidator(...)` (verified with `javap` on spring-security-oauth2-jose 6.5.11) → construct `new NimbusReactiveJwtDecoder(key)` + `setJwtValidator(JwtValidators.createDefaultWithIssuer("auth-service"))`.
+- **`Jwt.getIssuer()` converts the claim to `URL`**: a non-URL issuer (`auth-service`) throws at `getIssuer()`. The issuer validator itself is string-based and fine; tests must assert `getClaimAsString("iss")`.
+- **Boot's default reactive security chain takes over** once `oauth2-resource-server` is on the classpath: everything → 401 and POSTs → 403 (CSRF). The explicit `SecurityConfig` chain (whitelist D20 + CSRF/formLogin/basic disabled) replaces it; this is exactly what the 3 RED tests captured.
+- **`/swagger-ui.html` is not covered by `/swagger-ui/**`**: it only redirects there, so it must be permitted explicitly or the T10 entry URL would 401.
+
+**Dependencies:** T6, T8
+**Files likely touched:** `.../adapter/in/security/SecurityConfig.java`, `.../adapter/in/security/JwtDecoderConfig.java`, `config-server/.../config/gateway-server.yml` (public key), `src/test/java/.../GatewayE2ETests.java`, test keys
+**Estimated scope:** M (4-6 files)
+
+---
+
+## ✅ Checkpoint 3 (after T7–T9)
+
+- [ ] Full flow through the gateway: token → hello → `Hello world!`; no token → 401
+- [ ] `./mvnw -B verify` green (includes E2E)
+
+---
+
+## Task 10: Aggregated Swagger UI at the gateway
+
+**Description:** With springdoc webflux-ui on the gateway: try the automatic route aggregation first (like the official springdoc demo); if 2.9.1 does not list the services by itself, the documented fallback is `springdoc.swagger-ui.urls[]` with `auth-service`/`demo-service` → `/v3/api-docs/<svc>`. Whitelist already covered by D20 (`/swagger-ui/**`, `/v3/api-docs/**`). Verify the UI loads with both groups and that "Try it out" works with the JWT (Authorize → Bearer).
+
+**Acceptance criteria:**
+- [ ] `http://localhost:8080/swagger-ui.html` loads and shows the `auth-service` and `demo-service` APIs
+- [ ] Requesting a token and running `GET /api/demo/hello` from the UI with `Authorization: Bearer` returns `Hello world!`
+- [ ] The aggregation works by discovering random ports (no fixed service URLs)
+
+**Verification:**
+- [ ] Build: global `./mvnw -B verify`
+- [ ] Manual: full walkthrough from the browser (spec: "no Postman")
+
+**Dependencies:** T9
+**Files likely touched:** `server/gateway-server/.../application.yml` (if fallback), possible minimal customizer, README doc (T11)
+**Estimated scope:** S
+
+---
+
+## Task 11: `server/README.md` + global success-criteria verification
+
+**Description:** README with: requirements (JDK 25 + wrapper), startup order (config → eureka → auth/demo → gateway), commands (`verify`, `spring-boot:run`), step-by-step Swagger flow, `demo`/`demo` credentials, DEV-ONLY keys note, and how to change the TTL. Walk through SPEC.md's 7 success criteria one by one and record the result.
+
+**Acceptance criteria:**
+- [ ] README reproduces the startup and the full flow exactly as they work
+- [ ] The 7 success criteria checklist marked in this file
+- [ ] `webapp/` unchanged; `./mvnw -B verify` green from cold
+
+**Verification:**
+- [ ] Build: `./mvnw -B verify` (clean, from scratch)
+- [ ] Manual: follow the README literally from start to finish
+
+**Dependencies:** T10
+**Files likely touched:** `server/README.md`, this `todo.md` (final checklist)
+**Estimated scope:** S
+
+---
+
+## ✅ Final checkpoint
+
+- [ ] The 7 success criteria of SPEC.md verified one by one
+- [ ] `webapp/` untouched
+- [ ] Final review with the human
+</file>
+
+</files>
